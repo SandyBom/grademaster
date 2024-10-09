@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grademaster/Pages/register.dart';
 import 'Pages/home_page.dart';
 
 void main() {
