@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:grademaster/Pages/home.dart';
+import 'package:grademaster/Pages/login.dart';
 import 'package:grademaster/Pages/register.dart';
-import 'Pages/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/main',
+      routes: {
+        HomePage.nameRoute: (context) => HomePage(),
+        RegisterPage.nameRoute: (context) => RegisterPage(),
+        LoginPage.nameRoute: (context) => LoginPage()
+      },
       title: 'GradeMaster',
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
-    );}}
+      home: HomePage(),
+    );
+  }
+}
