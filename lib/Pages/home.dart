@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grademaster/components/material_3_demo/lib/component_screen.dart';
 // TODO: add flutter_svg to pubspec.yaml
 import 'package:grademaster/datas/demo.dart';
 
@@ -36,7 +37,10 @@ class HomePage extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Column(
-          children: [DiscountBanner(), GenerateCard()],
+          children: [
+            DiscountBanner(),
+            GenerateCard(),
+          ],
         ),
       ),
     );
