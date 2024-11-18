@@ -2,58 +2,67 @@ import 'package:flutter/material.dart';
 import 'package:grademaster/components/material_3_demo/lib/own_component.dart';
 
 class DescriptionPage extends StatelessWidget {
-  static const nameRoute = '/descriptionpage';
+  static const nameRoute = '/description';
+  final String id;
+  final String keterangan;
 
-  const DescriptionPage({super.key});
+  const DescriptionPage(
+      {super.key, required this.id, required this.keterangan});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight + 90),
-            child: SafeArea(
-                child: Stack(
-              children: [
-                Container(
-                  child: Positioned(
-                    top: 30,
-                    left: 20,
-                    child: FloatingActionButton.small(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Icon(Icons.arrow_back),
-                    ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight + 90),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Positioned(
+                top: 30,
+                left: 20,
+                child: FloatingActionButton.small(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Icon(Icons.arrow_back),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
+                  image: DecorationImage(
+                    image: AssetImage('ab.png'),
+                    fit: BoxFit.fill,
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
-                        bottom: Radius.elliptical(40, 40)),
-                    image: DecorationImage(
-                      image: AssetImage('ab.png'),
-                      fit: BoxFit.fill,
-                    ),
+              ),
+              const Center(
+                child: Text(
+                  'Fisika Dasar',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
                   ),
                 ),
-                Center(
-                  child: Text('Fisika Dasar',
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white)),
-                ),
-              ],
-            ))),
-        body: ListView(
-          children: [
-            BigBox(),
-            Description(),
-            BigButtonG(
-              label: 'Kerjakan Assesmen',
-            ),
-            Answer(jawaban: 'Lorem Ipsum')
-          ],
-        ));
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: ListView(
+        children: [
+          BigBox(),
+          Description(
+            keterangan: '',
+            id: '',
+          ), // Pass keterangan here
+          BigButtonG(label: 'Kerjakan Assesmen'),
+          Answer(jawaban: 'Lorem Ipsum'),
+        ],
+      ),
+    );
   }
 }
 
@@ -150,7 +159,10 @@ class BigBox extends StatelessWidget {
 }
 
 class Description extends StatelessWidget {
-  const Description({super.key});
+  const Description({super.key, required this.id, required this.keterangan});
+
+  final String id;
+  final String keterangan;
 
   @override
   Widget build(BuildContext context) {
@@ -165,8 +177,9 @@ class Description extends StatelessWidget {
                   'Syarat dan Ketentuan Assesmen',
                 ),
                 Text(
-                  'Lorem impsum de arif de cotole',
-                )
+                  '$id',
+                ),
+                Text(keterangan)
               ],
             )));
   }

@@ -49,6 +49,7 @@ class SoalAssesmen extends StatelessWidget {
             Container(
               height: 200,
               decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
                   color: OwnColor.colors['AbuAbu'],
                   image: DecorationImage(
                       image: AssetImage('rb_2150923186.png'),
@@ -63,11 +64,11 @@ class SoalAssesmen extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                MyForm(),
-                MyForm(),
-                MyForm(),
-                MyForm(),
-                MyForm(),
+                MyAnswer(),
+                MyAnswer(),
+                MyAnswer(),
+                MyAnswer(),
+                MyAnswer(),
               ],
             )
           ],
