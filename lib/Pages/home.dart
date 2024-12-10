@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:grademaster/Pages/assesment/description.dart';
 import 'package:http/http.dart' as http;
+import 'package:grademaster/Pages/assesment/description.dart';
 
 class HomePelajar extends StatelessWidget {
   static const nameRoute = '/homepelajar';
@@ -12,7 +12,7 @@ class HomePelajar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + 90),
+        preferredSize: Size.fromHeight(kToolbarHeight + 40),
         child: SafeArea(
           child: Stack(
             children: [
@@ -20,6 +20,10 @@ class HomePelajar extends StatelessWidget {
                 decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
+                  image: DecorationImage(
+                    image: AssetImage('assets/ab.png'),
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
               const Center(
@@ -36,10 +40,10 @@ class HomePelajar extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.symmetric(vertical: 16),
         child: Column(
-          children: const [
+          children: [
             DiscountBanner(),
             GenerateCard(),
           ],
@@ -66,9 +70,9 @@ class DiscountBanner extends StatelessWidget {
         TextSpan(
           style: TextStyle(color: Colors.white),
           children: [
-            TextSpan(text: "A Summer Surprise\n"),
+            TextSpan(text: "Selamat Mengerjakan Tugas!\n"),
             TextSpan(
-              text: "Cashback 20%",
+              text: "Kebenaran Relatif terhadap Penerimanya",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -104,40 +108,22 @@ class GenerateCardState extends State<GenerateCard> {
         Uri.parse("http://127.0.0.1/note_app/sesi/list.php"),
       );
 
-      print("Raw response: ${response.body}");
-
       if (response.statusCode == 200) {
-        try {
-          // Decode JSON sebagai Map
-          final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        final jsonResponse = jsonDecode(response.body);
 
-          // Cek tipe data dari jsonResponse
-          print("jsonResponse type: ${jsonResponse.runtimeType}");
+        if (jsonResponse['success'] == true && jsonResponse['data'] is List) {
+          // Validate each element in data
+          final validData = (jsonResponse['data'] as List)
+              .where((element) => element is Map<String, dynamic>)
+              .toList();
 
-          if (jsonResponse['success'] == true && jsonResponse['data'] is List) {
-            // Log tipe data untuk memverifikasi
-            print("Data is List: ${jsonResponse['data'].runtimeType}");
-
-            // Validasi setiap elemen dalam data
-            final validData = (jsonResponse['data'] as List).where((element) {
-              if (element is Map<String, dynamic>) {
-                return true;
-              } else {
-                print("Invalid element found: $element");
-                return false;
-              }
-            }).toList();
-
-            setState(() {
-              _get = validData;
-              _isLoading = false;
-            });
-          } else {
-            print(
-                "API Error: ${jsonResponse['message'] ?? 'Unexpected data format'}");
-          }
-        } catch (jsonError) {
-          print("JSON Parsing Error: $jsonError");
+          setState(() {
+            _get = validData;
+            _isLoading = false;
+          });
+        } else {
+          print(
+              "API Error: ${jsonResponse['message'] ?? 'Unexpected data format'}");
         }
       } else {
         print("HTTP Error: ${response.statusCode}");
@@ -159,8 +145,6 @@ class GenerateCardState extends State<GenerateCard> {
     if (_get.isEmpty) {
       return const Center(child: Text("No data available."));
     }
-
-    print("Data available: $_get"); // Log untuk memastikan data diterima
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -194,43 +178,76 @@ class AssesmentCard extends StatelessWidget {
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-              const Color.fromARGB(255, 144, 241, 147)),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           ),
-          elevation: MaterialStateProperty.all(0),
+          elevation: MaterialStateProperty.all(2),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(
-            '/description', // Ganti '/description' dengan nama route yang sesuai
-            arguments: {
-              'id': data['id'], // Kirim ID
-              'keterangan': data['keterangan_sesi'], // Kirim keterangan_sesi
-            },
+          final arguments = {
+            'id': data['id_assesmen'],
+            'nama_sesi': data['nama_assesmen'],
+            'keterangan': data['ket_assesmen'],
+            'tanggal': data['tanggal'],
+            'grade_pass': data['grade_pass'],
+          };
+
+          showModalBottomSheet<void>(
+            showDragHandle: true,
+            context: context,
+            isScrollControlled: true,
+            constraints: const BoxConstraints(maxWidth: 640),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            builder: (BuildContext context) =>
+                DescriptionPage(arguments: arguments),
           );
         },
         child: Padding(
-          padding: EdgeInsets.all(screenSize.width * 0.02),
+          padding: EdgeInsets.all(screenSize.width * 0.00),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: screenSize.width * 0.2,
-                    child: Text(
-                      data['nama_sesi'] ?? 'Unknown',
-                      style: TextStyle(
-                        fontSize: screenSize.width * 0.03,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w800,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      maxLines: 4,
-                    ),
-                  ),
+                  SizedBox(
+                      width: screenSize.width * 0.2,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.17,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.12,
+                                child: Text(
+                                  data['nama_assesmen'] ?? 'Unknown',
+                                  style: TextStyle(
+                                    fontSize: screenSize.width * 0.035,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w800,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  maxLines: 4,
+                                ),
+                              )
+                            ],
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.26,
+                            child: Text(
+                              data['nama_kelas'] ?? '-',
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * 0.03,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                          )
+                        ],
+                      )),
                   Container(
                     width: screenSize.width * 0.1,
                     height: screenSize.width * 0.1,
@@ -246,6 +263,33 @@ class AssesmentCard extends StatelessWidget {
                   ),
                 ],
               ),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.date_range,
+                        size: screenSize.width * 0.03,
+                      ),
+                      SizedBox(width: screenSize.width * 0.02),
+                      Text(data['tanggal'] ?? '-',
+                          style: TextStyle(fontSize: screenSize.width * 0.03)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Passing Grade: ',
+                        style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.03),
+                      ),
+                      SizedBox(width: screenSize.width * 0.02),
+                      Text(data['grade_pass'] ?? '-',
+                          style: TextStyle(fontSize: screenSize.width * 0.03)),
+                    ],
+                  ),
+                ],
+              )
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grademaster/Pages/assesment/soal.dart';
 
 class BigButtonB extends StatelessWidget {
   const BigButtonB({super.key, required this.label, this.onPressed});
@@ -30,33 +31,79 @@ class BigButtonB extends StatelessWidget {
 }
 
 class BigButtonG extends StatelessWidget {
-  const BigButtonG({super.key, required this.label, this.onPressed});
+  // Konstruktor dengan parameter label dan onPressed
+  const BigButtonG(
+      {super.key, required this.label, this.onPressed, required this.id});
 
+  // Parameter untuk label dan onPressed yang akan diteruskan ke ElevatedButton
+  final String id;
   final String label;
   final VoidCallback? onPressed;
-
-  static final actions = [ElevatedButton(onPressed: () {}, child: Text(''))];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: double.infinity,
-        height: 45,
+        width: double.infinity, // Membuat tombol mengambil lebar penuh
+        height: 45, // Tinggi tombol
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: ElevatedButton(
-              onPressed: () {},
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: ElevatedButton(
+              onPressed: () {
+                // Menampilkan dialog alert
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Konfirmasi'),
+                      content:
+                          const Text('Apakah Anda yakin ingin melanjutkan?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Menutup dialog
+                          },
+                          child: const Text('Batal'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SoalAssesmen(
+                                  id: id,
+                                ),
+                              ),
+                            ); // Menutup dialog
+                            // Tambahkan aksi Anda di sini
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Melanjutkan proses')),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: OwnColor.colors['Hijau'],
+                          ),
+                          child: const Text('Lanjut'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: OwnColor.colors['Hijau'],
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15))),
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: OwnColor.colors['Putih'],
+                backgroundColor: OwnColor.colors['Hijau'], // Warna tombol hijau
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      15), // Membuat tombol dengan sudut tumpul
                 ),
-              )),
-        ));
+              ),
+              child: const Text(
+                'Kerjakan Assesmen',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            )));
   }
 }
 
@@ -108,7 +155,7 @@ class _MyFormState extends State<MyForm> {
               child: TextFormField(
                 controller: _controller,
                 obscureText: false,
-                maxLines: null,
+                maxLines: 3,
                 decoration: InputDecoration(
                   labelText: widget.valueAnswer,
                   // Menggunakan parameter labelText
@@ -173,29 +220,6 @@ class Answer extends StatelessWidget {
   }
 }
 
-class MyAnswer extends StatelessWidget {
-  const MyAnswer({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
-      width: double.infinity,
-      height: 45,
-      decoration: ShapeDecoration(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-          side: BorderSide(
-              width: BorderSide.strokeAlignOutside, color: Colors.grey),
-        ),
-      ),
-      padding: EdgeInsets.all(10),
-      child: Row(
-        children: [MyCheckbox(), Text('vasjdnaksvdajskdnkas dgasbdkj')],
-      ),
-    );
-  }
-}
-
 class HistorySoal extends StatelessWidget {
   const HistorySoal({super.key, required this.soal});
   final String soal;
@@ -252,44 +276,35 @@ class HistorySoal extends StatelessWidget {
 }
 
 class OwnForm extends StatelessWidget {
-  final String hintText; // Menambahkan parameter hintText
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final bool obsecureText;
+  final String hintText;
   final String labelText;
-  final bool obsecureText; // Menambahkan parameter labelText
 
   const OwnForm({
     Key? key,
+    this.controller,
+    this.validator,
     required this.obsecureText,
-    required this.hintText, // Mengharuskan hintText diisi
-    required this.labelText, // Mengharuskan labelText diisi
+    required this.hintText,
+    required this.labelText,
   }) : super(key: key);
-
-  static final authOutlineInputBorder = OutlineInputBorder(
-    borderSide:
-        BorderSide(color: Colors.grey), // Ganti dengan warna yang diinginkan
-    borderRadius: const BorderRadius.all(Radius.circular(15)),
-  );
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 32, 0, 0),
-      height: 55,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
-        obscureText: false,
+        controller: controller,
+        obscureText: obsecureText,
+        maxLines: null,
+        validator: validator,
         decoration: InputDecoration(
-          hintText: hintText, // Menggunakan parameter hintText
-          labelText: labelText, // Menggunakan parameter labelText
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 16,
-          ),
-          border: authOutlineInputBorder,
-          enabledBorder: authOutlineInputBorder,
-          focusedBorder: authOutlineInputBorder.copyWith(
-            borderSide: const BorderSide(color: Color(0xFF214C7A)),
+          hintText: hintText,
+          labelText: labelText,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
       ),
@@ -354,126 +369,6 @@ class FinalButton extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15))),
             child: Text('Final Attempt')));
-  }
-}
-
-class IconDropdown extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<IconDropdown> {
-  final GlobalKey _key = LabeledGlobalKey("button_icon");
-  OverlayEntry? _overlayEntry;
-  Size buttonSize = Size.zero;
-  Offset buttonPosition = Offset.zero;
-  bool isMenuOpen = false;
-
-  List<FloatingActionButton> icons = [
-    FloatingActionButton.small(
-      onPressed: () {},
-      child: Icon(Icons.edit),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-    ),
-    FloatingActionButton.small(
-      onPressed: () {},
-      child: Icon(Icons.delete),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-    ),
-  ];
-
-  void findButton() {
-    RenderBox renderBox = _key.currentContext!.findRenderObject() as RenderBox;
-    buttonSize = renderBox.size;
-    buttonPosition = renderBox.localToGlobal(Offset.zero);
-  }
-
-  OverlayEntry _overlayEntryBuilder() {
-    return OverlayEntry(builder: (context) {
-      return Positioned(
-        top: buttonPosition.dy + buttonSize.height,
-        left: buttonPosition.dx,
-        width: buttonSize.width,
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            height: icons.length * buttonSize.height,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Theme(
-              data: ThemeData(
-                iconTheme: IconThemeData(
-                  color: Colors.white,
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: List.generate(
-                  icons.length,
-                  (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        // Handle icon tap
-                        print('Icon ${index + 1} tapped');
-                        closeMenu(); // Close menu on selection
-                      },
-                      child: Container(
-                        width: buttonSize.width,
-                        height: buttonSize.height,
-                        alignment: Alignment.center, // Center the icon
-                        child: icons[index],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-  }
-
-  void openMenu() {
-    findButton();
-    _overlayEntry = _overlayEntryBuilder();
-    Overlay.of(context).insert(_overlayEntry!);
-    setState(() {
-      isMenuOpen = true; // Update state to reflect that the menu is open
-    });
-  }
-
-  void closeMenu() {
-    _overlayEntry?.remove();
-    setState(() {
-      isMenuOpen = false; // Update state to reflect that the menu is closed
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      key: _key,
-      decoration: BoxDecoration(
-        color: OwnColor.colors['BiruTua'], // Use a valid color
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: IconButton(
-        icon: Icon(Icons.more_vert),
-        color: Colors.white,
-        onPressed: () {
-          if (isMenuOpen) {
-            closeMenu();
-          } else {
-            openMenu();
-          }
-        },
-      ),
-    );
   }
 }
 
