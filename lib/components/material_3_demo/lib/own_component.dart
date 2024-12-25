@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grademaster/Pages/assesment/soal.dart';
+import 'package:Grademaster/Pages/assesment/soal.dart';
 
 class BigButtonB extends StatelessWidget {
   const BigButtonB({super.key, required this.label, this.onPressed});
@@ -7,14 +7,14 @@ class BigButtonB extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
 
-  static final actions = [ElevatedButton(onPressed: () {}, child: Text(''))];
+  static final actions = [ElevatedButton(onPressed: () {}, child: const Text(''))];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 45,
       child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
@@ -33,20 +33,31 @@ class BigButtonB extends StatelessWidget {
 class BigButtonG extends StatelessWidget {
   // Konstruktor dengan parameter label dan onPressed
   const BigButtonG(
-      {super.key, required this.label, this.onPressed, required this.id});
+      {super.key,
+      required this.label,
+      this.onPressed,
+      required this.matkul,
+      required this.id,
+      required this.waktu_m,
+      required this.jadwal,
+      required this.waktu_s});
 
   // Parameter untuk label dan onPressed yang akan diteruskan ke ElevatedButton
   final String id;
+  final String waktu_m;
+  final String waktu_s;
+  final String jadwal;
   final String label;
   final VoidCallback? onPressed;
+  final String matkul;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: double.infinity, // Membuat tombol mengambil lebar penuh
         height: 45, // Tinggi tombol
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ElevatedButton(
               onPressed: () {
                 // Menampilkan dialog alert
@@ -70,7 +81,11 @@ class BigButtonG extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => SoalAssesmen(
+                                  idmatkul: matkul,
+                                  jadwal: jadwal,
                                   id: id,
+                                  waktuMulai: waktu_m,
+                                  waktuSelesai: waktu_s,
                                 ),
                               ),
                             ); // Menutup dialog
@@ -108,6 +123,8 @@ class BigButtonG extends StatelessWidget {
 }
 
 class MyCheckbox extends StatefulWidget {
+  const MyCheckbox({super.key});
+
   @override
   _MyCheckboxState createState() => _MyCheckboxState();
 }
@@ -133,7 +150,7 @@ class _MyCheckboxState extends State<MyCheckbox> {
 }
 
 class MyForm extends StatefulWidget {
-  const MyForm({required this.valueAnswer});
+  const MyForm({super.key, required this.valueAnswer});
   final String valueAnswer;
 
   @override
@@ -204,13 +221,13 @@ class Answer extends StatelessWidget {
       decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
-              side: BorderSide(
+              side: const BorderSide(
                   width: BorderSide.strokeAlignOutside, color: Colors.grey))),
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          MyCheckbox(),
-          SizedBox(
+          const MyCheckbox(),
+          const SizedBox(
             width: 10,
           ),
           Text(jawaban)
@@ -227,17 +244,17 @@ class HistorySoal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
+      margin: const EdgeInsets.fromLTRB(0, 16, 0, 0),
       width: double.infinity,
       height: 45,
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
-          side: BorderSide(
+          side: const BorderSide(
               width: BorderSide.strokeAlignOutside, color: Colors.grey),
         ),
       ),
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -246,23 +263,23 @@ class HistorySoal extends StatelessWidget {
             maxLines: null,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
             child: Row(
               children: [
                 FloatingActionButton.extended(
                   onPressed: () {},
                   elevation: 0,
-                  label: Row(
+                  label: const Row(
                     children: [Text('Edit'), Icon(Icons.edit)],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 FloatingActionButton.extended(
                   onPressed: () {},
                   elevation: 0,
-                  label: Row(
+                  label: const Row(
                     children: [Text('Hapus'), Icon(Icons.delete)],
                   ),
                 )
@@ -283,13 +300,13 @@ class OwnForm extends StatelessWidget {
   final String labelText;
 
   const OwnForm({
-    Key? key,
+    super.key,
     this.controller,
     this.validator,
     required this.obsecureText,
     required this.hintText,
     required this.labelText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -318,17 +335,17 @@ class NextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+        margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
         height: 55,
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(),
+        decoration: const BoxDecoration(),
         child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
                 backgroundColor: OwnColor.colors['Hijau'],
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15))),
-            child: Text('Next')));
+            child: const Text('Next')));
   }
 }
 
@@ -338,17 +355,17 @@ class PreviousButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+        margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
         height: 55,
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(),
+        decoration: const BoxDecoration(),
         child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
                 backgroundColor: OwnColor.colors['AbuAbu'],
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15))),
-            child: Text('Previous')));
+            child: const Text('Previous')));
   }
 }
 
@@ -358,29 +375,45 @@ class FinalButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+        margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
         height: 55,
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(),
+        decoration: const BoxDecoration(),
         child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
                 backgroundColor: OwnColor.colors['BiruTua'],
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15))),
-            child: Text('Final Attempt')));
+            child: const Text('Final Attempt')));
   }
+}
+
+BoxShadow customBoxShadow({
+  Color color = Colors.black,
+  double opacity = 0.5,
+  double blurRadius = 10.0,
+  double spreadRadius = 1.0,
+  Offset offset = const Offset(0, 4),
+}) {
+  return BoxShadow(
+    color: color.withOpacity(opacity),
+    blurRadius: blurRadius,
+    spreadRadius: spreadRadius,
+    offset: offset,
+  );
 }
 
 class OwnColor {
   static final Map<String, Color> colors = {
-    'Biru': Color(0xff64A8F0),
-    'BiruMuda': Color(0xffF2F5FF),
-    'Hijau': Color(0xff67C569),
-    'BiruTua': Color(0xff214C7A),
-    'AbuAbu': Color(0xff908F8F),
-    'AbuMuda': Color(0xffF2F5FF),
-    'Putih': Color(0xffF2F5FF),
+    'Biru': const Color(0xff64A8F0),
+    'BiruMuda': const Color(0xffF2F5FF),
+    'Hijau': const Color(0xff67C569),
+    'BiruTua': const Color(0xFF4A3298),
+    'AbuAbu': const Color(0xff908F8F),
+    'AbuMuda': const Color(0xffF2F5FF),
+    'Putih': const Color(0xffF2F5FF),
+    'Merah': const Color(0xffF68484),
   };
 }
 

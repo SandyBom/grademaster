@@ -180,10 +180,10 @@ class SignUpForm extends StatelessWidget {
 
 class SocalCard extends StatelessWidget {
   const SocalCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.press,
-  }) : super(key: key);
+  });
 
   final Widget icon;
   final VoidCallback press;
@@ -208,8 +208,8 @@ class SocalCard extends StatelessWidget {
 
 class NoAccountText extends StatelessWidget {
   const NoAccountText({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
+import 'package:Grademaster/Pages/assesment/addsoal.dart';
+import 'package:Grademaster/components/material_3_demo/lib/own_component.dart';
 import 'package:flutter/material.dart';
-import 'package:grademaster/Pages/assesment/addsoal.dart';
 import 'package:intl/intl.dart'; // Untuk format waktu
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -161,7 +162,8 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
               SnackBar(content: Text('Data successfully submitted')));
 
           // Navigate to AddSoal after successful submission
-          Navigator.pushNamed(context, AddSoal.nameRoute);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (BuildContext context) => AddSoal()));
         } else {
           // Show error message from server response
           String errorMessage = data['message'] ?? 'Submission failed';
@@ -197,7 +199,21 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
               if (!_isLoading) ...[
                 DropdownButtonFormField<String>(
                   value: _selectedMatkul,
-                  decoration: InputDecoration(labelText: 'ID Mata Kuliah'),
+                  decoration: InputDecoration(
+                    labelText: 'Matakulih',
+                    // Menggunakan parameter labelText
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    border: authOutlineInputBorder,
+                    enabledBorder: authOutlineInputBorder.copyWith(
+                        borderSide: const BorderSide(color: Colors.grey)),
+                    focusedBorder: authOutlineInputBorder.copyWith(
+                      borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                    ),
+                  ),
                   onChanged: (newValue) {
                     setState(() {
                       _selectedMatkul = newValue;
@@ -212,9 +228,26 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
                   validator: (value) =>
                       value == null ? 'ID Mata Kuliah is required' : null,
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 DropdownButtonFormField<String>(
                   value: _selectedKelas,
-                  decoration: InputDecoration(labelText: 'ID Kelas'),
+                  decoration: InputDecoration(
+                    labelText: 'Kelas',
+                    // Menggunakan parameter labelText
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    border: authOutlineInputBorder,
+                    enabledBorder: authOutlineInputBorder.copyWith(
+                        borderSide: const BorderSide(color: Colors.grey)),
+                    focusedBorder: authOutlineInputBorder.copyWith(
+                      borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                    ),
+                  ),
                   onChanged: (newValue) {
                     setState(() {
                       _selectedKelas = newValue;
@@ -231,12 +264,28 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
                 ),
                 ..._buildInputFields(),
                 SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    print('Submit button pressed');
-                    await _submitForm();
-                  },
-                  child: Text('Submit'),
+                Container(
+                    width: double.infinity,
+                    height: 45,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: OwnColor.colors['Hijau'],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15))),
+                        onPressed: () async {
+                          print('Submit button pressed');
+                          await _submitForm();
+                        },
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(color: OwnColor.colors['Putih']),
+                        ),
+                      ),
+                    )),
+                SizedBox(
+                  height: 10,
                 ),
               ]
             ],
@@ -246,45 +295,156 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
     );
   }
 
+  var authOutlineInputBorder = OutlineInputBorder(
+    borderSide: BorderSide(
+        color: OwnColor.colors['Red'] ??
+            Colors.black), // Menggunakan warna hitam sebagai default
+    borderRadius: const BorderRadius.all(Radius.circular(15)),
+  );
+
   List<Widget> _buildInputFields() {
     return [
+      SizedBox(
+        height: 10,
+      ),
       TextFormField(
         controller: _tanggalController,
-        decoration: InputDecoration(labelText: 'Tanggal'),
+        obscureText: false,
+        decoration: InputDecoration(
+          labelText: 'Tanggal',
+          // Menggunakan parameter labelText
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 16,
+          ),
+          border: authOutlineInputBorder,
+          enabledBorder: authOutlineInputBorder.copyWith(
+              borderSide: const BorderSide(color: Colors.grey)),
+          focusedBorder: authOutlineInputBorder.copyWith(
+            borderSide: const BorderSide(color: Color(0xFF214C7A)),
+          ),
+        ),
         readOnly: true,
         onTap: () => _selectDate(context),
         validator: (value) => value!.isEmpty ? 'Tanggal is required' : null,
       ),
+      SizedBox(
+        height: 10,
+      ),
       TextFormField(
         controller: _waktuMulaiController,
-        decoration: InputDecoration(labelText: 'Waktu Mulai'),
+        decoration: InputDecoration(
+          labelText: 'Waktu Mulai',
+          // Menggunakan parameter labelText
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 16,
+          ),
+          border: authOutlineInputBorder,
+          enabledBorder: authOutlineInputBorder.copyWith(
+              borderSide: const BorderSide(color: Colors.grey)),
+          focusedBorder: authOutlineInputBorder.copyWith(
+            borderSide: const BorderSide(color: Color(0xFF214C7A)),
+          ),
+        ),
         readOnly: true,
         onTap: () => _selectTime(context, true),
         validator: (value) => value!.isEmpty ? 'Waktu Mulai is required' : null,
       ),
+      SizedBox(
+        height: 10,
+      ),
       TextFormField(
         controller: _waktuSelesaiController,
-        decoration: InputDecoration(labelText: 'Waktu Selesai'),
+        decoration: InputDecoration(
+          labelText: 'Waktu Selesai',
+          // Menggunakan parameter labelText
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 16,
+          ),
+          border: authOutlineInputBorder,
+          enabledBorder: authOutlineInputBorder.copyWith(
+              borderSide: const BorderSide(color: Colors.grey)),
+          focusedBorder: authOutlineInputBorder.copyWith(
+            borderSide: const BorderSide(color: Color(0xFF214C7A)),
+          ),
+        ),
         readOnly: true,
         onTap: () => _selectTime(context, false),
         validator: (value) =>
             value!.isEmpty ? 'Waktu Selesai is required' : null,
       ),
+      SizedBox(
+        height: 10,
+      ),
       TextFormField(
         controller: _namaAssesmenController,
-        decoration: InputDecoration(labelText: 'Nama Assesmen'),
+        decoration: InputDecoration(
+          labelText: 'Nama Assesmen',
+          // Menggunakan parameter labelText
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 16,
+          ),
+          border: authOutlineInputBorder,
+          enabledBorder: authOutlineInputBorder.copyWith(
+              borderSide: const BorderSide(color: Colors.grey)),
+          focusedBorder: authOutlineInputBorder.copyWith(
+            borderSide: const BorderSide(color: Color(0xFF214C7A)),
+          ),
+        ),
         validator: (value) =>
             value!.isEmpty ? 'Nama Assesmen is required' : null,
       ),
+      SizedBox(
+        height: 10,
+      ),
       TextFormField(
         controller: _ketAssesmenController,
-        decoration: InputDecoration(labelText: 'Keterangan Assesmen'),
+        decoration: InputDecoration(
+          labelText: 'Keterangan Assesmen',
+          // Menggunakan parameter labelText
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 16,
+          ),
+          border: authOutlineInputBorder,
+          enabledBorder: authOutlineInputBorder.copyWith(
+              borderSide: const BorderSide(color: Colors.grey)),
+          focusedBorder: authOutlineInputBorder.copyWith(
+            borderSide: const BorderSide(color: Color(0xFF214C7A)),
+          ),
+        ),
         validator: (value) =>
             value!.isEmpty ? 'Keterangan Assesmen is required' : null,
       ),
+      SizedBox(
+        height: 10,
+      ),
       TextFormField(
         controller: _gradePassController,
-        decoration: InputDecoration(labelText: 'Grade Pass'),
+        decoration: InputDecoration(
+          labelText: 'Grade Pass',
+          hintText: '75',
+          // Menggunakan parameter labelText
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 16,
+          ),
+          border: authOutlineInputBorder,
+          enabledBorder: authOutlineInputBorder.copyWith(
+              borderSide: const BorderSide(color: Colors.grey)),
+          focusedBorder: authOutlineInputBorder.copyWith(
+            borderSide: const BorderSide(color: Color(0xFF214C7A)),
+          ),
+        ),
         keyboardType: TextInputType.number,
         validator: (value) => value!.isEmpty ? 'Grade Pass is required' : null,
       ),

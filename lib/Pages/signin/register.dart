@@ -1,229 +1,369 @@
+import 'dart:convert';
+import 'package:Grademaster/Pages/signin/login.dart';
+import 'package:Grademaster/components/material_3_demo/lib/own_component.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
-  _RegisterState createState() => _RegisterState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterState extends State<RegisterPage> {
-  TextEditingController namaPengguna = TextEditingController();
-  TextEditingController namaPanjang = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController noTelp = TextEditingController();
-  TextEditingController alamat = TextEditingController();
-  TextEditingController tanggalLahir = TextEditingController();
-  TextEditingController jenisKelamin = TextEditingController();
+class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+  String? role,
+      namaPengguna,
+      namaLengkap,
+      email,
+      kataSandi,
+      kelamin,
+      nisNip,
+      tanggalLahir,
+      noTelp,
+      alamat,
+      semester;
 
-  Future<void> insertrecord() async {
-    if (namaPanjang.text.isEmpty ||
-        email.text.isEmpty ||
-        password.text.isEmpty) {
-      print("Please fill all fields");
-      return; // Exit if fields are empty
-    }
+  TextEditingController tanggalLahirController = TextEditingController();
 
-    String uri = "http://192.168.56.1/grademaster/insert_record.php";
-    var data = {
-      "namaPanjang": namaPanjang.text,
-      "email": email.text,
-      "password": password.text,
+  Future<void> registerUser() async {
+    final url = Uri.parse('http://127.0.0.1/note_app/signin/register.php');
+
+    final body = {
+      'role': role,
+      'nama_pengguna': namaPengguna,
+      'nama_lengkap': namaLengkap,
+      'email': email,
+      'kata_sandi': kataSandi,
+      'tanggal_lahir': tanggalLahir,
+      'nis_nip': nisNip,
+      'kelamin': kelamin,
+      'no_telp': noTelp,
+      'alamat': alamat,
+      // Only include semester if the role is 'pelajar'
+      if (role == "pelajar") 'semester': semester,
     };
 
     try {
-      var response = await http.post(
-        Uri.parse(uri),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
+      print('Mengirim data ke server: $body');
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
       );
 
-      var jsonResponse = jsonDecode(response.body);
+      print('Status kode respons: ${response.statusCode}');
+      print('Body respons: ${response.body}');
 
       if (response.statusCode == 200) {
-        if (jsonResponse["succes"] == "true") {
-          print("Record Inserted");
+        final responseData = json.decode(response.body);
+        if (responseData['status'] == 'success') {
+          // Menampilkan Snackbar
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Anda berhasil terdaftar!')));
+
+          // Navigasi ke halaman LoginPage setelah 2 detik
+          await Future.delayed(Duration(seconds: 2));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
         } else {
-          print("Some Issue: ${jsonResponse["message"]}");
+          print('Registrasi gagal: ${responseData['message']}');
+          print('Debug info: ${responseData['debug']}');
         }
       } else {
-        print("Failed to insert record: ${response.statusCode}");
+        print('Gagal menghubungi server. Status kode: ${response.statusCode}');
       }
     } catch (e) {
-      print("Error: $e");
+      print('Terjadi kesalahan: $e');
     }
   }
 
-  @override
-  void dispose() {
-    namaPengguna.dispose();
-    namaPanjang.dispose();
-    email.dispose();
-    password.dispose();
-    super.dispose();
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        tanggalLahirController.text = DateFormat('yyyy-MM-dd').format(picked);
+        tanggalLahir = tanggalLahirController.text;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(),
-      home: Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight + 50),
-            child: Container(
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(20)),
-              child: Stack(
-                children: [
-                  Container(
-                    child: Positioned(
-                      top: 30,
-                      left: 20,
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Icon(Icons.arrow_back),
+    return Scaffold(
+      appBar: AppBar(title: Text('Registrasi')),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              DropdownButtonFormField<String>(
+                value: role,
+                items: ['pelajar', 'pengajar']
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (val) => setState(() => role = val),
+                decoration: InputDecoration(
+                  labelText: 'Role',
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  border: authOutlineInputBorder,
+                  enabledBorder: authOutlineInputBorder.copyWith(
+                      borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: authOutlineInputBorder.copyWith(
+                    borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Nama Pengguna',
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  border: authOutlineInputBorder,
+                  enabledBorder: authOutlineInputBorder.copyWith(
+                      borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: authOutlineInputBorder.copyWith(
+                    borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                  ),
+                ),
+                onChanged: (val) => namaPengguna = val,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Nama Lengkap',
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  border: authOutlineInputBorder,
+                  enabledBorder: authOutlineInputBorder.copyWith(
+                      borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: authOutlineInputBorder.copyWith(
+                    borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                  ),
+                ),
+                onChanged: (val) => namaLengkap = val,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  border: authOutlineInputBorder,
+                  enabledBorder: authOutlineInputBorder.copyWith(
+                      borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: authOutlineInputBorder.copyWith(
+                    borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                  ),
+                ),
+                onChanged: (val) => email = val,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Kata Sandi',
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  border: authOutlineInputBorder,
+                  enabledBorder: authOutlineInputBorder.copyWith(
+                      borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: authOutlineInputBorder.copyWith(
+                    borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                  ),
+                ),
+                obscureText: true,
+                onChanged: (val) => kataSandi = val,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: () => _selectDate(context),
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    controller: tanggalLahirController,
+                    decoration: InputDecoration(
+                      labelText: 'Tanggal Lahir',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
                       ),
+                      border: authOutlineInputBorder,
+                      enabledBorder: authOutlineInputBorder.copyWith(
+                          borderSide: const BorderSide(color: Colors.grey)),
+                      focusedBorder: authOutlineInputBorder.copyWith(
+                        borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                      ),
+                    ),
+                    onChanged: (val) => tanggalLahir = val,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'NIS/NIP',
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                        border: authOutlineInputBorder,
+                        enabledBorder: authOutlineInputBorder.copyWith(
+                            borderSide: const BorderSide(color: Colors.grey)),
+                        focusedBorder: authOutlineInputBorder.copyWith(
+                          borderSide:
+                              const BorderSide(color: Color(0xFF214C7A)),
+                        ),
+                      ),
+                      onChanged: (val) => nisNip = val,
+                    ),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Jenis Kelamin (L/P)',
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                        border: authOutlineInputBorder,
+                        enabledBorder: authOutlineInputBorder.copyWith(
+                            borderSide: const BorderSide(color: Colors.grey)),
+                        focusedBorder: authOutlineInputBorder.copyWith(
+                          borderSide:
+                              const BorderSide(color: Color(0xFF214C7A)),
+                        ),
+                      ),
+                      onChanged: (val) => kelamin = val,
                     ),
                   )
                 ],
               ),
-            )),
-        body: ListView(padding: EdgeInsets.fromLTRB(20, 0, 20, 0), children: [
-          FormRegister(
-            namaPanjang: namaPanjang,
-            namaPengguna: namaPengguna,
-            email: email,
-            password: password,
+              if (role == 'pelajar')
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Semester',
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    border: authOutlineInputBorder,
+                    enabledBorder: authOutlineInputBorder.copyWith(
+                        borderSide: const BorderSide(color: Colors.grey)),
+                    focusedBorder: authOutlineInputBorder.copyWith(
+                      borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                    ),
+                  ),
+                  onChanged: (val) => semester = val,
+                ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'No Telepon',
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  border: authOutlineInputBorder,
+                  enabledBorder: authOutlineInputBorder.copyWith(
+                      borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: authOutlineInputBorder.copyWith(
+                    borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                  ),
+                ),
+                onChanged: (val) => noTelp = val,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Alamat',
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  border: authOutlineInputBorder,
+                  enabledBorder: authOutlineInputBorder.copyWith(
+                      borderSide: const BorderSide(color: Colors.grey)),
+                  focusedBorder: authOutlineInputBorder.copyWith(
+                    borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                  ),
+                ),
+                onChanged: (val) => alamat = val,
+              ),
+              SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                height: 45,
+                child: ElevatedButton(
+                  onPressed: registerUser,
+                  child: Text('Register',
+                      style: TextStyle(
+                        color: OwnColor.colors['Putih'],
+                      )),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        OwnColor.colors['Hijau'], // Warna tombol hijau
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          15), // Membuat tombol dengan sudut tumpul
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-        ]),
+        ),
       ),
     );
   }
 }
-
-class FormRegister extends StatelessWidget {
-  final TextEditingController namaPanjang;
-  final TextEditingController namaPengguna;
-  final TextEditingController email;
-  final TextEditingController password;
-
-  FormRegister({
-    required this.namaPanjang,
-    required this.namaPengguna,
-    required this.email,
-    required this.password,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-            width: MediaQuery.of(context).size.width * 0.3,
-            height: MediaQuery.of(context).size.height * 0.4,
-            child: Image(
-              image: AssetImage('rb_2150923186.png'),
-              fit: BoxFit.contain,
-            )),
-        Container(
-            margin: EdgeInsets.fromLTRB(0, 32, 0, 0),
-            height: 55,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(color: Colors.white),
-            child: TextFormField(
-                controller: namaPanjang,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Full Name",
-                  labelText: "Username",
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
-                  ),
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Color(0xFF214C7A))),
-                ))),
-        Container(
-            margin: EdgeInsets.fromLTRB(0, 32, 0, 0),
-            height: 55,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(color: Colors.white),
-            child: TextFormField(
-                controller: password,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Password",
-                  labelText: "Password",
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
-                  ),
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Color(0xFF214C7A))),
-                ))),
-        Container(
-            margin: EdgeInsets.fromLTRB(0, 32, 0, 0),
-            height: 55,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(color: Colors.white),
-            child: TextFormField(
-                controller: namaPengguna,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Email",
-                  labelText: "Email",
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
-                  ),
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Color(0xFF214C7A))),
-                ))),
-        Container(
-            margin: EdgeInsets.fromLTRB(0, 32, 0, 0),
-            height: 55,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(color: Colors.white),
-            child: TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Rewrite Password",
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
-                  ),
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Color(0xFF214C7A))),
-                ))),
-        ElevatedButton(
-          onPressed: () {
-            // Call the insert record function
-            // (This will require the parent state to be updated)
-          },
-          child: Text('Register'),
-        ),
-      ],
-    );
-  }
-}
-
-const authOutlineInputBorder = OutlineInputBorder(
-  borderSide: BorderSide(color: Color(0xFF214C7A)),
-  borderRadius: BorderRadius.all(Radius.circular(15)),
-);

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:Grademaster/Pages/index_pengajar.dart';
+import 'package:Grademaster/components/material_3_demo/lib/own_component.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,7 +17,7 @@ class RekapSoal extends StatefulWidget {
 
 class _RekapSoalState extends State<RekapSoal> {
   late Future<List<dynamic>> _soalData;
-  List<Map<String, dynamic>> _soalList = []; // Menyimpan data soal di state
+  List<Map<String, dynamic>> _soalList = [];
 
   @override
   void initState() {
@@ -48,41 +50,51 @@ class _RekapSoalState extends State<RekapSoal> {
     return [];
   }
 
-  // Fungsi untuk menyimpan soal dan jawaban yang telah diubah
-  Future<void> _saveEditedData(
-      List<Map<String, dynamic>> editedSoalList) async {
+  Future<void> _saveEditedData() async {
     final url =
         Uri.parse('http://127.0.0.1/note_app/soal_ujian/update_soal.php');
-    final idAssesmen = widget.arguments['id_assesmen']; // Tambahkan id_assesmen
+    final idAssesmen = widget.arguments['id_assesmen'];
+
     try {
-      for (var soalData in editedSoalList) {
-        final response = await http.post(url, body: {
+      for (var soal in _soalList) {
+        final soalData = {
           'id_assesmen': idAssesmen.toString(),
-          'id_soal': soalData['id_soal'].toString(),
-          'soal': soalData['soal'],
-          'jawaban': jsonEncode(
-              soalData['jawaban']), // Kirim jawaban dalam JSON string
-        });
+          'id_soal': soal['id_soal'].toString(),
+          'soal': soal['soal'],
+          'jawaban': jsonEncode(soal['jawaban']), // JSON-encode jawaban
+        };
+
+        final response = await http.post(
+          url,
+          body: soalData,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        );
 
         if (response.statusCode == 200) {
-          try {
-            final data = jsonDecode(response.body); // Mencoba mengdecode JSON
-            if (data['success'] == true) {
-              print('Soal dan jawaban berhasil disimpan!');
-            } else {
-              print('Error dari server: ${data['message']}');
-            }
-          } catch (e) {
-            print('Error parsing JSON: $e');
-            print('Response body: ${response.body}');
+          final data = jsonDecode(response.body);
+          if (data['success'] == true) {
+            print('Soal ${soal['id_soal']} berhasil disimpan.');
+          } else {
+            print('Error dari server: ${data['message']}');
           }
         } else {
           print('Error: HTTP ${response.statusCode}');
-          print('Response body: ${response.body}');
         }
       }
+
+      // Tampilkan notifikasi berhasil
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data soal berhasil disimpan!')),
+      );
+
+      // Kembali ke halaman HomePengajar dan refresh data
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => IndexPengajar()));
     } catch (e) {
       print('Error saving data: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving data: $e')),
+      );
     }
   }
 
@@ -90,7 +102,7 @@ class _RekapSoalState extends State<RekapSoal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + 90),
+        preferredSize: Size.fromHeight(kToolbarHeight + 40),
         child: SafeArea(
           child: Stack(
             children: [
@@ -105,13 +117,21 @@ class _RekapSoalState extends State<RekapSoal> {
                 ),
               ),
               Center(
-                child: Text(
-                  'Rekap Soal',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
+                child: Text('Edit Soal',
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white)),
+              ),
+              Positioned(
+                left: 16,
+                top: 16,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    // Call Navigator.pop() to go back to the previous screen
+                    Navigator.pop(context);
+                  },
                 ),
               ),
             ],
@@ -137,26 +157,6 @@ class _RekapSoalState extends State<RekapSoal> {
                 final soal = _soalList[index];
                 final jawaban = soal['jawaban'] ?? [];
 
-                // Controller untuk soal
-                TextEditingController soalController =
-                    TextEditingController(text: soal['soal']);
-
-                // Simpan indeks jawaban yang benar
-                int? selectedJawabanIndex =
-                    jawaban.indexWhere((j) => j['benar_salah'] == 1);
-
-                // List untuk menyimpan kontroler jawaban
-                List<Map<String, dynamic>> jawabanData = [];
-                for (int i = 0; i < jawaban.length; i++) {
-                  jawabanData.add({
-                    'controller': TextEditingController(
-                        text: jawaban[i]['keterangan_pilihan']),
-                    'index': i,
-                    'id_pilihan': jawaban[i]
-                        ['id_pilihan'], // Menambahkan id_pilihan
-                  });
-                }
-
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Card(
@@ -166,14 +166,17 @@ class _RekapSoalState extends State<RekapSoal> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextField(
-                            controller: soalController,
+                          TextFormField(
+                            initialValue: soal['soal'],
+                            onChanged: (value) {
+                              _soalList[index]['soal'] = value;
+                            },
                             decoration: InputDecoration(
                               labelText: 'Soal',
-                              border: OutlineInputBorder(),
+                              border: authOutlineInputBorder,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             'Jawaban:',
                             style: TextStyle(
@@ -181,35 +184,38 @@ class _RekapSoalState extends State<RekapSoal> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
-                          ...jawabanData.map((data) {
-                            int index = data['index'];
+                          const SizedBox(height: 8),
+                          ...List.generate(jawaban.length, (jawabanIndex) {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: Row(
                                 children: [
                                   Expanded(
                                     flex: 2,
-                                    child: TextField(
-                                      controller: data['controller'],
+                                    child: TextFormField(
+                                      initialValue: jawaban[jawabanIndex]
+                                          ['keterangan_pilihan'],
+                                      onChanged: (value) {
+                                        _soalList[index]['jawaban']
+                                                [jawabanIndex]
+                                            ['keterangan_pilihan'] = value;
+                                      },
                                       decoration: InputDecoration(
-                                        labelText:
-                                            'Jawaban ${String.fromCharCode(65 + index)}',
-                                        border: OutlineInputBorder(),
+                                        labelText: 'Jawaban',
+                                        border: authOutlineInputBorder,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Expanded(
-                                    flex: 1,
+                                    flex: 0,
                                     child: Radio<int>(
-                                      value: index,
-                                      groupValue: selectedJawabanIndex,
+                                      value: jawabanIndex,
+                                      groupValue: jawaban.indexWhere(
+                                          (j) => j['benar_salah'] == 1),
                                       onChanged: (value) {
                                         setState(() {
-                                          selectedJawabanIndex = value;
-                                          // Perbarui nilai "benar_salah" di data jawaban
-                                          for (var i = 0;
+                                          for (int i = 0;
                                               i < jawaban.length;
                                               i++) {
                                             jawaban[i]['benar_salah'] =
@@ -222,8 +228,8 @@ class _RekapSoalState extends State<RekapSoal> {
                                 ],
                               ),
                             );
-                          }).toList(),
-                          SizedBox(height: 16),
+                          }),
+                          const SizedBox(height: 16),
                         ],
                       ),
                     ),
@@ -234,46 +240,8 @@ class _RekapSoalState extends State<RekapSoal> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Kumpulkan data soal dan jawaban yang sudah diedit
-          List<Map<String, dynamic>> editedSoalList = [];
-
-          for (int index = 0; index < _soalList.length; index++) {
-            final soal = _soalList[index];
-            final soalController = TextEditingController(
-                text: soal['soal']); // Menggunakan controller soal
-
-            List<Map<String, dynamic>> editedJawaban = [];
-
-            // Pastikan setiap jawaban memiliki kontroler teks
-            List<TextEditingController> jawabanControllers = soal['jawaban']
-                .map<TextEditingController>((jawaban) =>
-                    TextEditingController(text: jawaban['keterangan_pilihan']))
-                .toList();
-
-            for (int i = 0; i < soal['jawaban'].length; i++) {
-              final jawaban = soal['jawaban'][i];
-              final controller = jawabanControllers[i];
-
-              // Masukkan jawaban yang telah diedit
-              editedJawaban.add({
-                'keterangan_pilihan': controller.text,
-                'benar_salah': jawaban['benar_salah'],
-                'id_pilihan': jawaban['id_pilihan'], // Menambahkan id_pilihan
-              });
-            }
-
-            editedSoalList.add({
-              'id_soal': soal['id_soal'],
-              'soal': soalController.text,
-              'jawaban': editedJawaban,
-            });
-          }
-
-          // Simpan perubahan yang telah diedit
-          _saveEditedData(editedSoalList);
-
-          // Debugging
-          print('Data yang dikirim: ${jsonEncode(editedSoalList)}');
+          _saveEditedData();
+          print('Data yang dikirim: ${jsonEncode(_soalList)}');
         },
         child: Icon(Icons.save),
       ),

@@ -1,62 +1,138 @@
+import 'package:Grademaster/Pages/index.dart';
+import 'package:Grademaster/Pages/index_pengajar.dart';
+import 'package:Grademaster/Pages/signin/login.dart';
+import 'package:Grademaster/components/material_3_demo/lib/own_component.dart';
 import 'package:flutter/material.dart';
-import 'package:grademaster/Pages/assesment/addsoal.dart';
-import 'package:grademaster/Pages/assesment/assesment.dart';
-import 'package:grademaster/Pages/assesment/description.dart';
-import 'package:grademaster/Pages/assesment/rekapsoal.dart';
-import 'package:grademaster/Pages/assesment/review.dart';
-import 'package:grademaster/Pages/assesment/soal.dart';
-import 'package:grademaster/Pages/home.dart';
-import 'package:grademaster/Pages/pengajar/edit_assesment.dart';
-import 'package:grademaster/Pages/pengajar/pengajar_home.dart';
-import 'package:grademaster/Pages/pengajar/rekap/list_jadwal.dart';
-import 'package:grademaster/Pages/signin/login.dart';
-import 'package:grademaster/Pages/trial.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        LoginPage.nameRoute: (context) => LoginPage(),
-        HomePengajar.nameRoute: (context) => HomePengajar(),
-        TrialMaterial.nameRoute: (context) => TrialMaterial(),
-        HomePelajar.nameRoute: (context) => HomePelajar(),
-        HomePengajar.nameRoute: (context) => HomePengajar(),
-        AddSoal.nameRoute: (context) => AddSoal(),
-      },
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case DescriptionPage.nameRoute:
-            // Pastikan data dikirimkan via arguments
-            if (settings.arguments != null) {
-              final data = settings.arguments as Map<String, dynamic>;
-              return MaterialPageRoute(
-                builder: (context) => DescriptionPage(
-                  arguments: data,
-                ),
-              );
-            } else {
-              // Tangani jika arguments tidak ada
-              return MaterialPageRoute(
-                builder: (context) => const Scaffold(
-                  body: Center(child: Text("Data tidak ditemukan")),
-                ),
-              );
-            }
-          default:
-            return null; // Jika tidak cocok, biarkan `null`
-        }
-      },
-      title: 'GradeMaster',
+      title: 'Landing Page',
       debugShowCheckedModeBanner: false,
-      home: HomePengajar(),
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(),
+        primarySwatch: Colors.blue,
+      ),
+      home: LandingPage(),
+    );
+  }
+}
+
+class LandingPage extends StatefulWidget {
+  @override
+  _LandingPageState createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
+  bool isLoading = false;
+
+  Future<void> navigateToNextPage() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    await Future.delayed(Duration(seconds: 1)); // Simulasi proses loading
+
+    String? token;
+    String? role;
+
+    try {
+      // Baca token dan role pengguna dari storage
+      token = await _storage.read(key: 'user_token');
+      role = await _storage.read(key: 'user_role');
+    } catch (e) {
+      print('Error reading secure storage: $e');
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (token != null && token.isNotEmpty) {
+      if (role == 'pelajar') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => Index()),
+        );
+      } else if (role == 'pengajar') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => IndexPengajar()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Peran pengguna tidak dikenali.')),
+        );
+      }
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 20),
+            Image.asset(
+              'logo.png',
+              width: 300,
+              height: 300,
+            ),
+            SizedBox(height: 10),
+            Container(
+              width: 260,
+              child: Text(
+                'Solusi terbaik untuk kebutuhan Ujian di Kelas Kamu!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            SizedBox(height: 30),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Container(
+                height: 40,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: isLoading ? null : navigateToNextPage,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: OwnColor.colors['Biru'],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: isLoading
+                      ? CircularProgressIndicator(
+                          color: OwnColor.colors['Putih'],
+                        )
+                      : Text(
+                          'Mulai Sekarang!',
+                          style: TextStyle(color: OwnColor.colors['Putih']),
+                        ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

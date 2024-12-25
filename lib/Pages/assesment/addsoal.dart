@@ -1,6 +1,7 @@
 import 'dart:convert';
+import 'package:Grademaster/Pages/index_pengajar.dart';
 import 'package:flutter/material.dart';
-import 'package:grademaster/Pages/pengajar/pengajar_home.dart';
+import 'package:Grademaster/Pages/pengajar/pengajar_home.dart';
 import 'package:http/http.dart' as http;
 
 class AddSoal extends StatefulWidget {
@@ -46,7 +47,7 @@ class _AddSoalState extends State<AddSoal> {
   }
 
   Future<void> _fetchAssesmenList() async {
-    final url = Uri.parse('http://127.0.0.1/note_app/sesi/list.php');
+    final url = Uri.parse('http://127.0.0.1/note_app/sesi/list_sesi.php');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -63,7 +64,7 @@ class _AddSoalState extends State<AddSoal> {
           });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Gagal memuat data asesmen')),
+            const SnackBar(content: Text('Gagal memuat data asesmen')),
           );
         }
       } else {
@@ -93,7 +94,7 @@ class _AddSoalState extends State<AddSoal> {
         _resetForm();
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Soal berhasil ditambahkan ke daftar')),
+        const SnackBar(content: Text('Soal berhasil ditambahkan ke daftar')),
       );
     }
   }
@@ -101,7 +102,7 @@ class _AddSoalState extends State<AddSoal> {
   Future<void> _submitQuestions() async {
     if (_questions.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Tambahkan setidaknya satu soal')),
+        const SnackBar(content: Text('Tambahkan setidaknya satu soal')),
       );
       return;
     }
@@ -146,7 +147,7 @@ class _AddSoalState extends State<AddSoal> {
 
     // Menampilkan Snackbar setelah berhasil mengirim soal
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Semua soal berhasil dikirim!')),
+      const SnackBar(content: Text('Semua soal berhasil dikirim!')),
     );
 
     // Menghapus soal yang sudah dikirim
@@ -157,7 +158,7 @@ class _AddSoalState extends State<AddSoal> {
     // Navigasi ke halaman HomePengajar setelah soal berhasil dikirim
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomePengajar()),
+      MaterialPageRoute(builder: (context) => const IndexPengajar()),
     );
   }
 
@@ -171,7 +172,7 @@ class _AddSoalState extends State<AddSoal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Tambah Soal')),
+      appBar: AppBar(title: const Text('Tambah Soal')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -193,24 +194,23 @@ class _AddSoalState extends State<AddSoal> {
                     }).toList(),
                     onChanged: (value) =>
                         setState(() => _selectedAssesmen = value),
-                    decoration: InputDecoration(labelText: 'Pilih ID Assesmen'),
+                    decoration:
+                        const InputDecoration(labelText: 'Pilih ID Assesmen'),
                   ),
                   TextFormField(
                     controller: _questionController,
-                    decoration: InputDecoration(labelText: 'Pertanyaan'),
+                    decoration: const InputDecoration(labelText: 'Pertanyaan'),
                   ),
                   TextFormField(
                     controller: _poinController,
-                    decoration: InputDecoration(labelText: 'Poin'),
+                    decoration: const InputDecoration(labelText: 'Poin'),
                     keyboardType: TextInputType.number,
                   ),
-                  ..._answerControllers.entries
-                      .map((entry) => TextFormField(
-                            controller: entry.value,
-                            decoration: InputDecoration(
-                                labelText: 'Jawaban ${entry.key}'),
-                          ))
-                      .toList(),
+                  ..._answerControllers.entries.map((entry) => TextFormField(
+                        controller: entry.value,
+                        decoration:
+                            InputDecoration(labelText: 'Jawaban ${entry.key}'),
+                      )),
                   DropdownButtonFormField<String>(
                     value: _correctAnswer,
                     items: _answerControllers.keys
@@ -224,20 +224,20 @@ class _AddSoalState extends State<AddSoal> {
                     children: [
                       ElevatedButton(
                         onPressed: _addQuestion,
-                        child: Text('Tambah Soal'),
+                        child: const Text('Tambah Soal'),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: _questions.isEmpty ? null : _submitQuestions,
-                        child: Text('Submit Soal'),
+                        child: const Text('Submit Soal'),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            Text('Daftar Soal:'),
+            const SizedBox(height: 20),
+            const Text('Daftar Soal:'),
             ListView.builder(
               shrinkWrap: true,
               itemCount: _questions.length,
