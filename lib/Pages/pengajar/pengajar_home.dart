@@ -2,6 +2,8 @@ import 'package:Grademaster/Pages/assesment/addsoal.dart';
 import 'package:Grademaster/Pages/assesment/assesment.dart';
 import 'package:Grademaster/Pages/assesment/rekapsoal.dart';
 import 'package:Grademaster/Pages/pengajar/edit_assesment.dart';
+import 'package:Grademaster/Pages/pengajar/rekap/bank_soal.dart';
+import 'package:Grademaster/Pages/pengajar/rekap/list_pengajar.dart';
 import 'package:Grademaster/Pages/pengajar/rekap/siswa_terdaftar.dart';
 import 'package:Grademaster/components/material_3_demo/lib/own_component.dart';
 import 'package:flutter/material.dart';
@@ -153,57 +155,129 @@ class PageBox extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                height: 40,
-                width: screenWidth * 0.4,
-                child: ElevatedButton.icon(
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SiswaTerdaftar())),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  height: 40,
+                  child: ElevatedButton.icon(
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SiswaTerdaftar())),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    icon: Icon(
+                      Icons.groups,
+                      color: OwnColor.colors['BiruTua'],
+                    ),
+                    label: Text('Pelajar Terdaftar',
+                        style: TextStyle(
+                            color: OwnColor.colors['BiruTua'],
+                            fontSize:
+                                MediaQuery.of(context).size.width * 0.023)),
                   ),
-                  icon: Icon(
-                    Icons.groups,
-                    color: OwnColor.colors['BiruTua'],
-                  ),
-                  label: Text('Mahasiswa Terdaftar',
-                      style: TextStyle(
-                          color: OwnColor.colors['BiruTua'],
-                          fontSize: MediaQuery.of(context).size.width * 0.023)),
                 ),
               ),
-              SizedBox(
-                height: 40,
-                width: screenWidth * 0.4,
-                child: ElevatedButton.icon(
-                  onPressed: () => {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AddSoal()))
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+              SizedBox(width: screenWidth * 0.02),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  height: 40,
+                  child: ElevatedButton.icon(
+                    onPressed: () => {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => AddSoal()))
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    icon: Icon(
+                      Icons.add,
+                      color: OwnColor.colors['BiruTua'],
+                    ),
+                    label: Text('Tambah Soal',
+                        style: TextStyle(
+                            color: OwnColor.colors['BiruTua'],
+                            fontSize:
+                                MediaQuery.of(context).size.width * 0.023)),
                   ),
-                  icon: Icon(
-                    Icons.add,
-                    color: OwnColor.colors['BiruTua'],
-                  ),
-                  label: Text('Tambah Soal',
-                      style: TextStyle(
-                          color: OwnColor.colors['BiruTua'],
-                          fontSize: MediaQuery.of(context).size.width * 0.023)),
                 ),
-              ),
+              )
             ],
           ),
           SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                  flex: 1,
+                  child: Container(
+                    height: 40,
+                    child: ElevatedButton.icon(
+                      onPressed: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PengajarTerdaftar()))
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      ),
+                      icon: Icon(
+                        Icons.man_outlined,
+                        color: OwnColor.colors['BiruTua'],
+                      ),
+                      label: Text('Pengajar Terdaftar',
+                          style: TextStyle(
+                              color: OwnColor.colors['BiruTua'],
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.023)),
+                    ),
+                  )),
+              SizedBox(width: screenWidth * 0.02),
+              Expanded(
+                  flex: 1,
+                  child: Container(
+                    height: 40,
+                    child: ElevatedButton.icon(
+                      onPressed: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BankSoalPage()))
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      ),
+                      icon: Icon(
+                        Icons.collections_bookmark_rounded,
+                        color: OwnColor.colors['BiruTua'],
+                      ),
+                      label: Text('Bank Soal',
+                          style: TextStyle(
+                              color: OwnColor.colors['BiruTua'],
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.023)),
+                    ),
+                  ))
+            ],
+          ),
           SizedBox(
               width: double.infinity,
               height: 40,

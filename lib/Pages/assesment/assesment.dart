@@ -25,6 +25,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
 
   List<dynamic> _mataKuliah = [];
   List<dynamic> _kelas = [];
+  List<dynamic> allKelas = [];
   String? _selectedMatkul;
   String? _selectedKelas;
   bool _isLoading = false;
@@ -33,6 +34,25 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
   void initState() {
     super.initState();
     _fetchData();
+    _fetchAllKelas();
+  }
+
+  Future<void> _fetchAllKelas() async {
+    try {
+      final response =
+          await http.get(Uri.parse('http://127.0.0.1/note_app/sesi/get.php'));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == 'success') {
+          setState(() {
+            allKelas = data['kelas'];
+            _kelas = allKelas; // Default semua kelas
+          });
+        }
+      }
+    } catch (e) {
+      _showErrorMessage('Error fetching kelas: $e');
+    }
   }
 
   Future<void> _fetchData() async {
@@ -200,8 +220,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
                 DropdownButtonFormField<String>(
                   value: _selectedMatkul,
                   decoration: InputDecoration(
-                    labelText: 'Matakulih',
-                    // Menggunakan parameter labelText
+                    labelText: 'Matakuliah',
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 24,
@@ -217,6 +236,24 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
                   onChanged: (newValue) {
                     setState(() {
                       _selectedMatkul = newValue;
+
+                      // Filter data `kelas` berdasarkan `id_prodi`
+                      final selectedMatkul = _mataKuliah.firstWhere(
+                        (matkul) => matkul['id_matkul'] == newValue,
+                        orElse: () => null,
+                      );
+
+                      if (selectedMatkul != null) {
+                        _kelas = allKelas
+                            .where((kelas) =>
+                                kelas['id_prodi'] == selectedMatkul['id_prodi'])
+                            .toList();
+                      } else {
+                        _kelas = [];
+                      }
+
+                      // Reset pilihan kelas
+                      _selectedKelas = null;
                     });
                   },
                   items: _mataKuliah.map<DropdownMenuItem<String>>((matkul) {
@@ -235,7 +272,6 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
                   value: _selectedKelas,
                   decoration: InputDecoration(
                     labelText: 'Kelas',
-                    // Menggunakan parameter labelText
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 24,
@@ -253,14 +289,17 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
                       _selectedKelas = newValue;
                     });
                   },
-                  items: _kelas.map<DropdownMenuItem<String>>((kelas) {
-                    return DropdownMenuItem<String>(
-                      value: kelas['id_kelas'].toString(),
-                      child: Text(kelas['nama_kelas']),
-                    );
-                  }).toList(),
+                  items: _kelas.isEmpty
+                      ? null
+                      : _kelas.map<DropdownMenuItem<String>>((kelas) {
+                          return DropdownMenuItem<String>(
+                            value: kelas['id_kelas'].toString(),
+                            child: Text(kelas['nama_kelas']),
+                          );
+                        }).toList(),
                   validator: (value) =>
-                      value == null ? 'ID Kelas is required' : null,
+                      value == null ? 'Kelas is required' : null,
+                  disabledHint: Text('Tidak ada Kelas'),
                 ),
                 ..._buildInputFields(),
                 SizedBox(height: 20),

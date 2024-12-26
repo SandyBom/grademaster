@@ -76,12 +76,7 @@ class DiscountBanner extends StatelessWidget {
                 flex: 1,
                 child: FloatingActionButton.extended(
                     backgroundColor: OwnColor.colors['Putih'],
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => EnrollPage()));
-                    },
+                    onPressed: () {},
                     icon: Container(
                       width: 35,
                       height: 35,
@@ -98,7 +93,13 @@ class DiscountBanner extends StatelessWidget {
                 flex: 1,
                 child: FloatingActionButton.extended(
                     backgroundColor: OwnColor.colors['Putih'],
-                    onPressed: () => {},
+                    onPressed: () => {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      EnrollPage()))
+                        },
                     icon: Container(
                       width: 35,
                       height: 35,
@@ -234,7 +235,7 @@ class GenerateCardState extends State<GenerateCard> {
       return const Center(child: Text('Belum Enroll Mata Kuliah nih'));
     }
     if (_get.isEmpty) {
-      return const Center(child: Text("No data available."));
+      return const Center(child: Text("Tidak ada Asesmen"));
     }
 
     print("Data available: $_get");

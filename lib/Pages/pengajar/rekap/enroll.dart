@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:Grademaster/components/material_3_demo/lib/own_component.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -111,8 +112,42 @@ class _EnrollPageState extends State<EnrollPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Enroll in Courses"),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight + 40),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
+                  image: DecorationImage(
+                    image: AssetImage('ab.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              Center(
+                child: Text('Enroll Mata Kuliah',
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white)),
+              ),
+              Positioned(
+                left: 16,
+                top: 16,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    // Call Navigator.pop() to go back to the previous screen
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -121,15 +156,47 @@ class _EnrollPageState extends State<EnrollPage> {
               itemBuilder: (context, index) {
                 final matkul = matkulList[index];
                 return ListTile(
-                  title: Text(matkul['nama_matkul']),
-                  trailing: ElevatedButton(
-                    onPressed: () {
-                      _enrollInMatkul(int.parse(matkul['id_matkul']
-                          .toString())); // Ensure it's passed as int
-                    },
-                    child: Text("Enroll"),
-                  ),
-                );
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(matkul['nama_matkul']), // Menampilkan nama_matkul
+                        SizedBox(
+                            height:
+                                5), // Memberi jarak antara nama_matkul dan nama_prodi
+                        Text(
+                          matkul['nama_prodi'], // Menampilkan nama_prodi
+                          style: TextStyle(
+                            fontSize:
+                                14, // Ukuran font lebih kecil untuk nama_prodi
+                            color:
+                                Colors.grey, // Warna abu-abu untuk nama_prodi
+                          ),
+                        ),
+                      ],
+                    ),
+                    trailing: Container(
+                        height: 45,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                OwnColor.colors['Hijau'], // Warna tombol hijau
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  15), // Membuat tombol dengan sudut tumpul
+                            ),
+                          ),
+                          onPressed: () {
+                            _enrollInMatkul(
+                                int.parse(matkul['id_matkul'].toString()));
+                            // Ensure it's passed as int
+                          },
+                          child: Text(
+                            "Enroll",
+                            style: TextStyle(
+                              color: OwnColor.colors['Putih'],
+                            ),
+                          ),
+                        )));
               },
             ),
     );
