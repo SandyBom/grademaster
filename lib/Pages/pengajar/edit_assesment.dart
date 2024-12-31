@@ -99,7 +99,7 @@ class _EditAsessmentState extends State<EditAsessment> {
               (picked.hour == _parseTime(_waktuMulaiController.text).hour &&
                   picked.minute <=
                       _parseTime(_waktuMulaiController.text).minute)) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Waktu Selesai harus setelah Waktu Mulai')));
             return;
           }
@@ -161,7 +161,7 @@ class _EditAsessmentState extends State<EditAsessment> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => IndexPengajar()),
+                builder: (BuildContext context) => const IndexPengajar()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -205,12 +205,12 @@ class _EditAsessmentState extends State<EditAsessment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + 40),
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
         child: SafeArea(
           child: Stack(
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
                   image: DecorationImage(
@@ -219,7 +219,7 @@ class _EditAsessmentState extends State<EditAsessment> {
                   ),
                 ),
               ),
-              Center(
+              const Center(
                 child: Text('Edit Assesmen',
                     style: TextStyle(
                         fontSize: 28,
@@ -230,7 +230,7 @@ class _EditAsessmentState extends State<EditAsessment> {
                 left: 16,
                 top: 16,
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
                     // Call Navigator.pop() to go back to the previous screen
                     Navigator.pop(context);
@@ -334,15 +334,11 @@ class _EditAsessmentState extends State<EditAsessment> {
                     value!.isEmpty ? 'Grade pass tidak boleh kosong' : null,
               ),
               const SizedBox(height: 20),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 height: 45,
                 child: ElevatedButton(
                   onPressed: _updateData,
-                  child: Text(
-                    'Simpan Perubahan',
-                    style: TextStyle(color: OwnColor.colors['Putih']),
-                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
                         OwnColor.colors['BiruTua'], // Warna tombol hijau
@@ -350,6 +346,10 @@ class _EditAsessmentState extends State<EditAsessment> {
                       borderRadius: BorderRadius.circular(
                           15), // Membuat tombol dengan sudut tumpul
                     ),
+                  ),
+                  child: Text(
+                    'Simpan Perubahan',
+                    style: TextStyle(color: OwnColor.colors['Putih']),
                   ),
                 ),
               ),

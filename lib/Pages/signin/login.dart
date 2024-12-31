@@ -11,6 +11,8 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,6 +24,8 @@ class MyApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -30,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String? role, email, kataSandi;
   bool isLoading = false;
-  final storage = FlutterSecureStorage(); // Untuk menyimpan token
+  final storage = const FlutterSecureStorage(); // Untuk menyimpan token
 
   // Fungsi login yang akan menghubungi API
   Future<void> loginUser() async {
@@ -58,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
 
         if (responseData['status'] == 'success') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login berhasil!')),
+            const SnackBar(content: Text('Login berhasil!')),
           );
 
           // Menyimpan token dan mendekode id_user
@@ -83,18 +87,20 @@ class _LoginPageState extends State<LoginPage> {
             if (role == 'pelajar') {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (BuildContext context) => Index()),
+                MaterialPageRoute(
+                    builder: (BuildContext context) => const Index()),
               );
             } else if (role == 'pengajar') {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => IndexPengajar()),
+                    builder: (BuildContext context) => const IndexPengajar()),
               );
             }
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Token tidak ditemukan, login gagal.')),
+              const SnackBar(
+                  content: Text('Token tidak ditemukan, login gagal.')),
             );
           }
         } else {
@@ -105,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
       } catch (e) {
         print('Error: $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Terjadi kesalahan, coba lagi.')),
+          const SnackBar(content: Text('Terjadi kesalahan, coba lagi.')),
         );
       } finally {
         setState(() {
@@ -119,10 +125,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -163,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -187,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                 validator: (value) =>
                     value!.isEmpty ? 'Email tidak boleh kosong' : null,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -212,19 +218,27 @@ class _LoginPageState extends State<LoginPage> {
                 validator: (value) =>
                     value!.isEmpty ? 'Kata sandi tidak boleh kosong' : null,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     flex: 1,
-                    child: Container(
+                    child: SizedBox(
                         width: double
                             .infinity, // Membuat tombol mengambil lebar penuh
                         height: 45, // Tinggi tombol
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0),
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
                           child: ElevatedButton(
                             onPressed: isLoading ? null : loginUser,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: OwnColor
+                                  .colors['BiruTua'], // Warna tombol hijau
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15), // Membuat tombol dengan sudut tumpul
+                              ),
+                            ),
                             child: isLoading
                                 ? CircularProgressIndicator(
                                     color: Colors.white,
@@ -234,28 +248,20 @@ class _LoginPageState extends State<LoginPage> {
                                     style: TextStyle(
                                         color: OwnColor.colors['Putih']),
                                   ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: OwnColor
-                                  .colors['BiruTua'], // Warna tombol hijau
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15), // Membuat tombol dengan sudut tumpul
-                              ),
-                            ),
                           ),
                         )),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Expanded(
                     flex: 1,
-                    child: Container(
+                    child: SizedBox(
                         width: double
                             .infinity, // Membuat tombol mengambil lebar penuh
                         height: 45, // Tinggi tombol
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0),
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(
@@ -264,6 +270,14 @@ class _LoginPageState extends State<LoginPage> {
                                     builder: (context) => RegisterPage()),
                               );
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: OwnColor
+                                  .colors['Hijau'], // Warna tombol hijau
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15), // Membuat tombol dengan sudut tumpul
+                              ),
+                            ),
                             child: isLoading
                                 ? CircularProgressIndicator(
                                     color: Colors.white,
@@ -273,14 +287,6 @@ class _LoginPageState extends State<LoginPage> {
                                     style: TextStyle(
                                         color: OwnColor.colors['Putih']),
                                   ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: OwnColor
-                                  .colors['Hijau'], // Warna tombol hijau
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15), // Membuat tombol dengan sudut tumpul
-                              ),
-                            ),
                           ),
                         )),
                   ),

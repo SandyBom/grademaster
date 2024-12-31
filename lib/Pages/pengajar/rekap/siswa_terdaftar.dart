@@ -52,12 +52,12 @@ class _SiswaTerdaftarState extends State<SiswaTerdaftar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + 40),
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
         child: SafeArea(
           child: Stack(
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
                   image: DecorationImage(
@@ -66,8 +66,8 @@ class _SiswaTerdaftarState extends State<SiswaTerdaftar> {
                   ),
                 ),
               ),
-              Center(
-                child: Text('Beranda',
+              const Center(
+                child: Text('Pelajar Terdaftar',
                     style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
@@ -77,7 +77,7 @@ class _SiswaTerdaftarState extends State<SiswaTerdaftar> {
                 left: 16,
                 top: 16,
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
                     // Call Navigator.pop() to go back to the previous screen
                     Navigator.pop(context);
@@ -91,7 +91,7 @@ class _SiswaTerdaftarState extends State<SiswaTerdaftar> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: _isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: studentData.map<Widget>((student) {
                   return Padding(
@@ -116,7 +116,7 @@ class _SiswaTerdaftarState extends State<SiswaTerdaftar> {
                                     "Semester", student['semester']),
                               ],
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -146,16 +146,16 @@ class _SiswaTerdaftarState extends State<SiswaTerdaftar> {
           children: [
             Text(
               "$label:",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Colors.black54,
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               value ?? 'N/A',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: Colors.black87,

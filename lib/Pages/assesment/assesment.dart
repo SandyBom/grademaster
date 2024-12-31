@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AssesmentPage extends StatefulWidget {
+  const AssesmentPage({super.key});
+
   @override
   _JadwalUjianPageState createState() => _JadwalUjianPageState();
 }
@@ -129,7 +131,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
           if (picked.hour < _waktuMulai.hour ||
               (picked.hour == _waktuMulai.hour &&
                   picked.minute <= _waktuMulai.minute)) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Waktu Selesai harus setelah Waktu Mulai')));
             return;
           }
@@ -144,8 +146,8 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       if (_selectedKelas == null || _selectedMatkul == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Please select Mata Kuliah and Kelas')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Please select Mata Kuliah and Kelas')));
         return;
       }
       setState(() {
@@ -179,11 +181,13 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
 
         if (response.statusCode == 200 && data['status'] == 'success') {
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Data successfully submitted')));
+              const SnackBar(content: Text('Data successfully submitted')));
 
           // Navigate to AddSoal after successful submission
-          Navigator.push(context,
-              MaterialPageRoute(builder: (BuildContext context) => AddSoal()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => const AddSoal()));
         } else {
           // Show error message from server response
           String errorMessage = data['message'] ?? 'Submission failed';
@@ -204,17 +208,17 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Form Input Jadwal Ujian')),
+      appBar: AppBar(title: const Text('Form Input Jadwal Ujian')),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: <Widget>[
               if (_isLoading) ...[
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text('Submitting your data... please wait...'),
+                const CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                const Text('Submitting your data... please wait...'),
               ],
               if (!_isLoading) ...[
                 DropdownButtonFormField<String>(
@@ -265,7 +269,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
                   validator: (value) =>
                       value == null ? 'ID Mata Kuliah is required' : null,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 DropdownButtonFormField<String>(
@@ -299,15 +303,15 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
                         }).toList(),
                   validator: (value) =>
                       value == null ? 'Kelas is required' : null,
-                  disabledHint: Text('Tidak ada Kelas'),
+                  disabledHint: const Text('Tidak ada Kelas'),
                 ),
                 ..._buildInputFields(),
-                SizedBox(height: 20),
-                Container(
+                const SizedBox(height: 20),
+                SizedBox(
                     width: double.infinity,
                     height: 45,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: OwnColor.colors['Hijau'],
@@ -323,7 +327,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
                         ),
                       ),
                     )),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
               ]
@@ -343,7 +347,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
 
   List<Widget> _buildInputFields() {
     return [
-      SizedBox(
+      const SizedBox(
         height: 10,
       ),
       TextFormField(
@@ -368,7 +372,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
         onTap: () => _selectDate(context),
         validator: (value) => value!.isEmpty ? 'Tanggal is required' : null,
       ),
-      SizedBox(
+      const SizedBox(
         height: 10,
       ),
       TextFormField(
@@ -392,7 +396,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
         onTap: () => _selectTime(context, true),
         validator: (value) => value!.isEmpty ? 'Waktu Mulai is required' : null,
       ),
-      SizedBox(
+      const SizedBox(
         height: 10,
       ),
       TextFormField(
@@ -417,7 +421,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
         validator: (value) =>
             value!.isEmpty ? 'Waktu Selesai is required' : null,
       ),
-      SizedBox(
+      const SizedBox(
         height: 10,
       ),
       TextFormField(
@@ -440,7 +444,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
         validator: (value) =>
             value!.isEmpty ? 'Nama Assesmen is required' : null,
       ),
-      SizedBox(
+      const SizedBox(
         height: 10,
       ),
       TextFormField(
@@ -463,7 +467,7 @@ class _JadwalUjianPageState extends State<AssesmentPage> {
         validator: (value) =>
             value!.isEmpty ? 'Keterangan Assesmen is required' : null,
       ),
-      SizedBox(
+      const SizedBox(
         height: 10,
       ),
       TextFormField(

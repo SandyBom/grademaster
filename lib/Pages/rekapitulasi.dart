@@ -4,6 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class RekapitulasiPage extends StatefulWidget {
+  const RekapitulasiPage({super.key});
+
   @override
   _RekapitulasiPageState createState() => _RekapitulasiPageState();
 }
@@ -12,7 +14,7 @@ class _RekapitulasiPageState extends State<RekapitulasiPage> {
   List<dynamic> _rekapitulasiData = [];
   bool _isLoading = true;
 
-  final storage = FlutterSecureStorage(); // Untuk menyimpan token
+  final storage = const FlutterSecureStorage(); // Untuk menyimpan token
   String? token; // Untuk menyimpan token yang diambil
   String? idPelajar; // Store idPelajar here
 
@@ -83,12 +85,12 @@ class _RekapitulasiPageState extends State<RekapitulasiPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Pemberitahuan'),
+        title: const Text('Pemberitahuan'),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -99,12 +101,12 @@ class _RekapitulasiPageState extends State<RekapitulasiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Rekapitulasi'),
+        title: const Text('Rekapitulasi'),
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : _rekapitulasiData.isEmpty
-              ? Center(child: Text('Tidak ada data rekapitulasi.'))
+              ? const Center(child: Text('Tidak ada data rekapitulasi.'))
               : ListView.builder(
                   itemCount: _rekapitulasiData.length,
                   itemBuilder: (context, index) {

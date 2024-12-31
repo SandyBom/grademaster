@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class BankSoalPage extends StatefulWidget {
+  const BankSoalPage({super.key});
+
   @override
   _BankSoalPageState createState() => _BankSoalPageState();
 }
@@ -58,11 +60,45 @@ class _BankSoalPageState extends State<BankSoalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Bank Soal'),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
+                  image: DecorationImage(
+                    image: AssetImage('ab.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              const Center(
+                child: Text('Bank Soal',
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white)),
+              ),
+              Positioned(
+                left: 16,
+                top: 16,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    // Call Navigator.pop() to go back to the previous screen
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: _assessments.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: _assessments.length,
               itemBuilder: (context, index) {
@@ -80,13 +116,13 @@ class _BankSoalPageState extends State<BankSoalPage> {
 class QuestionsPage extends StatelessWidget {
   final List<dynamic> data;
 
-  QuestionsPage({required this.data});
+  const QuestionsPage({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Questions'),
+        title: const Text('Questions'),
       ),
       body: ListView.builder(
         itemCount: data.length,

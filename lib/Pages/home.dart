@@ -62,6 +62,7 @@ class DiscountBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
         width: double.infinity,
         margin: const EdgeInsets.all(20),
@@ -87,8 +88,11 @@ class DiscountBanner extends StatelessWidget {
                       child:
                           Icon(Icons.groups, color: OwnColor.colors['Putih']),
                     ),
-                    label: Text('Kelas'))),
-            SizedBox(width: 10),
+                    label: Text(
+                      'Kelas',
+                      style: TextStyle(color: OwnColor.colors['BiruTua']),
+                    ))),
+            SizedBox(width: screenWidth * 0.02),
             Expanded(
                 flex: 1,
                 child: FloatingActionButton.extended(
@@ -112,7 +116,10 @@ class DiscountBanner extends StatelessWidget {
                         color: OwnColor.colors['Putih'],
                       ),
                     ),
-                    label: Text('Pelajaran'))),
+                    label: Text(
+                      'Pelajaran',
+                      style: TextStyle(color: OwnColor.colors['BiruTua']),
+                    ))),
           ],
         ));
   }
@@ -148,12 +155,12 @@ class GenerateCardState extends State<GenerateCard> {
       setState(() {
         token = storedToken;
         idPelajar = storedId;
+        _isLoading = false; // Set loading false setelah data selesai dimuat
       });
 
       print('Token: $token');
       print('ID Pelajar: $idPelajar');
 
-      // After loading the data, get the id_matkul
       if (idPelajar != null) {
         await _getMatkul(); // Get the id_matkul from the first API
       }
@@ -171,16 +178,13 @@ class GenerateCardState extends State<GenerateCard> {
         final jsonResponse = jsonDecode(response.body);
 
         if (jsonResponse['success'] == true && jsonResponse['data'] != null) {
-          // Assuming the response contains a list of courses and we want to get the first one
-          final firstMatkul =
-              jsonResponse['data'][0]; // Adjust this if you want to handle more
-          setState(() {
-            idMatkul = firstMatkul['id_matkul'].toString();
-          });
+          final List<dynamic> matkulList = jsonResponse['data'];
 
-          // Call the second API after getting id_matkul
-          if (idMatkul != null) {
-            await _getData(idMatkul!); // Pass the id_matkul to _getData
+          // Iterasi setiap id_matkul dan panggil API kedua
+          for (var matkul in matkulList) {
+            final idMatkul = matkul['id_matkul'].toString();
+            await _getData(
+                idMatkul); // Ambil data asesmen berdasarkan id_matkul
           }
         } else {
           print("API Error: ${jsonResponse['message'] ?? 'No courses found'}");
@@ -195,24 +199,39 @@ class GenerateCardState extends State<GenerateCard> {
 
   Future<void> _getData(String idMatkul) async {
     try {
+      print("Fetching data for idMatkul: $idMatkul"); // Debugging print
+
       final response = await http.get(
         Uri.parse(
-            "http://127.0.0.1/note_app/sesi/list.php?id_pelajar=$idPelajar&&id_matkul=$idMatkul"),
+            "http://127.0.0.1/note_app/sesi/list.php?id_pelajar=$idPelajar&id_matkul=$idMatkul"),
       );
 
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
+        print("JSON Response: $jsonResponse"); // Debugging print
 
         if (jsonResponse['success'] == true && jsonResponse['data'] is List) {
-          // Validate each element in data
           final validData = (jsonResponse['data'] as List)
-              .where((element) => element is Map<String, dynamic>)
+              .whereType<Map<String, dynamic>>()
               .toList();
 
-          setState(() {
-            _get = validData;
-            _isLoading = false;
-          });
+          print("Valid Data Extracted: $validData"); // Debugging print
+
+          if (validData.isNotEmpty) {
+            setState(() {
+              // Hanya menambahkan data yang belum ada dalam _get
+              for (var item in validData) {
+                if (!_get.any((existingItem) =>
+                    existingItem['id_assesmen'] == item['id_assesmen'])) {
+                  _get.add(item);
+                }
+              }
+              print(
+                  "Data successfully added to _get: $_get"); // Debugging print
+            });
+          } else {
+            print("No valid assessment data found for idMatkul: $idMatkul");
+          }
         } else {
           print(
               "API Error: ${jsonResponse['message'] ?? 'Unexpected data format'}");
@@ -222,10 +241,6 @@ class GenerateCardState extends State<GenerateCard> {
       }
     } catch (e) {
       print("Error fetching data: $e");
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
@@ -271,12 +286,24 @@ class AssesmentCard extends StatelessWidget {
 
     // Ambil tanggal saat ini
     DateTime currentDate = DateTime.now();
+    print(currentDate); // Misalnya: 2024-12-31 13:41:49.850
 
-    // Ambil tanggal dari data (pastikan formatnya sesuai dengan yang diterima dari DB)
+// Ambil tanggal dari data dan konversi menjadi DateTime
     DateTime assesmentDate = DateTime.parse(data['tanggal']);
+    print(assesmentDate); // Misalnya: 2024-12-31 00:00:00.000
 
-    // Bandingkan tanggal saat ini dengan tanggal assesmen
+// Hanya bandingkan tanggalnya tanpa waktu (jam, menit, detik, milidetik)
+    currentDate =
+        DateTime(currentDate.year, currentDate.month, currentDate.day);
+    assesmentDate =
+        DateTime(assesmentDate.year, assesmentDate.month, assesmentDate.day);
+
+// Bandingkan tanggal
     bool isPastDate = currentDate.isAfter(assesmentDate);
+
+    print("Current Date: $currentDate");
+    print("Assessment Date: $assesmentDate");
+    print("Is past date: $isPastDate");
 
     return Visibility(
       visible: !isPastDate, // Menyembunyikan jika tanggal sudah lewat

@@ -35,7 +35,7 @@ class _SoalAssesmenState extends State<SoalAssesmen> {
   late String jadwal;
   Timer? timer;
 
-  final storage = FlutterSecureStorage(); // Untuk menyimpan token
+  final storage = const FlutterSecureStorage(); // Untuk menyimpan token
   String? token; // Untuk menyimpan token yang diambil
   String? idPelajar; // Store idPelajar here
 
@@ -141,19 +141,75 @@ class _SoalAssesmenState extends State<SoalAssesmen> {
     final formattedTime = _formatDuration(sisaWaktu);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Soal Assesmen'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Text(
-                'Sisa Waktu: $formattedTime',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
+                  image: DecorationImage(
+                    image: AssetImage('ab.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
               ),
-            ),
+              const Center(
+                child: Text('Assesmen',
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white)),
+              ),
+              Positioned(
+                left: 16,
+                top: 16,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    // Tampilkan dialog konfirmasi ketika tombol kembali ditekan
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Konfirmasi"),
+                          content: const Text(
+                              "Apakah Anda yakin ingin keluar tanpa menyimpan perubahan?"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // Tutup dialog
+                              },
+                              child: const Text("Batal"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // Tutup dialog
+                                Navigator.pop(
+                                    context); // Kembali ke halaman sebelumnya
+                              },
+                              child: const Text("Ya"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              Positioned(
+                right: 16,
+                top: 16,
+                child: Text(
+                  'Sisa Waktu: $formattedTime',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
           ),
-        ],
+        ),
       ),
       body: idPelajar == null
           ? const Center(child: CircularProgressIndicator())
@@ -220,7 +276,7 @@ class _ListSoalState extends State<ListSoal> {
 
         if (jsonResponse is Map && jsonResponse['success'] == true) {
           final validData = (jsonResponse['data'] as List)
-              .where((element) => element is Map<String, dynamic>)
+              .whereType<Map<String, dynamic>>()
               .toList();
 
           setState(() {
@@ -262,18 +318,13 @@ class _ListSoalState extends State<ListSoal> {
                         children: [
                           Expanded(
                             flex: 1,
-                            child: Container(
+                            child: SizedBox(
                               width: double.infinity,
                               height: 45,
                               child: ElevatedButton(
                                 onPressed: _currentIndex > 0
                                     ? _previousQuestion
                                     : null,
-                                child: Text(
-                                  'Sebelumnya',
-                                  style: TextStyle(
-                                      color: OwnColor.colors['Puith']),
-                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: OwnColor.colors['BiruTua'],
                                   shape: RoundedRectangleBorder(
@@ -281,34 +332,39 @@ class _ListSoalState extends State<ListSoal> {
                                         15), // Membuat tombol dengan sudut tumpul
                                   ),
                                 ),
+                                child: Text(
+                                  'Sebelumnya',
+                                  style: TextStyle(
+                                      color: OwnColor.colors['Puith']),
+                                ),
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
                           Expanded(
                             flex: 1,
-                            child: Container(
+                            child: SizedBox(
                               width: double.infinity,
                               height: 45,
                               child: ElevatedButton(
                                 onPressed: _currentIndex < _soal.length - 1
                                     ? _nextQuestion
                                     : _submit,
-                                child: Text(
-                                  _currentIndex < _soal.length - 1
-                                      ? 'Selanjutnya'
-                                      : 'Selesai',
-                                  style: TextStyle(
-                                      color: OwnColor.colors['Putih']),
-                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: OwnColor.colors['Hijau'],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
                                         15), // Membuat tombol dengan sudut tumpul
                                   ),
+                                ),
+                                child: Text(
+                                  _currentIndex < _soal.length - 1
+                                      ? 'Selanjutnya'
+                                      : 'Selesai',
+                                  style: TextStyle(
+                                      color: OwnColor.colors['Putih']),
                                 ),
                               ),
                             ),
@@ -394,7 +450,7 @@ class _ListSoalState extends State<ListSoal> {
     // Mengambil waktu saat ini
     final waktuSubmit = DateTime.now().toIso8601String();
 
-    final data_rekap = {
+    final dataRekap = {
       'id_pelajar': widget.idPelajar,
       'id_jadwal': widget.jadwal,
       'total_nilai': totalScore, // Kirim 0 jika nilainya nol
@@ -409,7 +465,7 @@ class _ListSoalState extends State<ListSoal> {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${widget.token}',
         },
-        body: jsonEncode(data_rekap),
+        body: jsonEncode(dataRekap),
       );
 
       if (responseRekapitulasi.statusCode == 200) {
@@ -436,7 +492,7 @@ class _ListSoalState extends State<ListSoal> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Index(), // Halaman utama
+                        builder: (context) => const Index(), // Halaman utama
                       ),
                     );
                   },

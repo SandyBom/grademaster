@@ -8,12 +8,12 @@ class EditAssesment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + 40),
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
         child: SafeArea(
           child: Stack(
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
                   image: DecorationImage(
@@ -22,7 +22,7 @@ class EditAssesment extends StatelessWidget {
                   ),
                 ),
               ),
-              Center(
+              const Center(
                 child: Text('Edit Assesmen',
                     style: TextStyle(
                         fontSize: 28,
@@ -33,7 +33,7 @@ class EditAssesment extends StatelessWidget {
                 left: 16,
                 top: 16,
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
                     // Call Navigator.pop() to go back to the previous screen
                     Navigator.pop(context);
@@ -44,8 +44,8 @@ class EditAssesment extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.symmetric(vertical: 16),
         child: Column(
           children: [],
         ),

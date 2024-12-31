@@ -7,7 +7,9 @@ class BigButtonB extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
 
-  static final actions = [ElevatedButton(onPressed: () {}, child: const Text(''))];
+  static final actions = [
+    ElevatedButton(onPressed: () {}, child: const Text(''))
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -407,13 +409,14 @@ BoxShadow customBoxShadow({
 class OwnColor {
   static final Map<String, Color> colors = {
     'Biru': const Color(0xff64A8F0),
-    'BiruMuda': const Color(0xffF2F5FF),
+    'BiruMuda': const Color(0xffD6DDF4),
     'Hijau': const Color(0xff67C569),
     'BiruTua': const Color(0xFF4A3298),
     'AbuAbu': const Color(0xff908F8F),
     'AbuMuda': const Color(0xffF2F5FF),
     'Putih': const Color(0xffF2F5FF),
     'Merah': const Color(0xffF68484),
+    'Hitam': const Color(0xff060E15),
   };
 }
 

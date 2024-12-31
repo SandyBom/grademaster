@@ -9,12 +9,12 @@ class ListJadwal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight + 90),
+          preferredSize: const Size.fromHeight(kToolbarHeight + 90),
           child: SafeArea(
               child: Stack(
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
                   image: DecorationImage(
@@ -23,7 +23,7 @@ class ListJadwal extends StatelessWidget {
                   ),
                 ),
               ),
-              Center(
+              const Center(
                 child: Text('Beranda',
                     style: TextStyle(
                         fontSize: 28,
@@ -32,8 +32,8 @@ class ListJadwal extends StatelessWidget {
               ),
             ],
           ))),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.symmetric(vertical: 16),
         child: Column(
           children: [],
         ),

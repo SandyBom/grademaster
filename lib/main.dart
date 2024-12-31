@@ -11,6 +11,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,12 +28,14 @@ class MyApp extends StatelessWidget {
 }
 
 class LandingPage extends StatefulWidget {
+  const LandingPage({super.key});
+
   @override
   _LandingPageState createState() => _LandingPageState();
 }
 
 class _LandingPageState extends State<LandingPage> {
-  final FlutterSecureStorage _storage = FlutterSecureStorage();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   bool isLoading = false;
 
   Future<void> navigateToNextPage() async {
@@ -39,7 +43,7 @@ class _LandingPageState extends State<LandingPage> {
       isLoading = true;
     });
 
-    await Future.delayed(Duration(seconds: 1)); // Simulasi proses loading
+    await Future.delayed(const Duration(seconds: 1)); // Simulasi proses loading
 
     String? token;
     String? role;
@@ -60,16 +64,17 @@ class _LandingPageState extends State<LandingPage> {
       if (role == 'pelajar') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (BuildContext context) => Index()),
+          MaterialPageRoute(builder: (BuildContext context) => const Index()),
         );
       } else if (role == 'pengajar') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (BuildContext context) => IndexPengajar()),
+          MaterialPageRoute(
+              builder: (BuildContext context) => const IndexPengajar()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Peran pengguna tidak dikenali.')),
+          const SnackBar(content: Text('Peran pengguna tidak dikenali.')),
         );
       }
     } else {
@@ -88,16 +93,16 @@ class _LandingPageState extends State<LandingPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Image.asset(
               'logo.png',
               width: 300,
               height: 300,
             ),
-            SizedBox(height: 10),
-            Container(
+            const SizedBox(height: 10),
+            SizedBox(
               width: 260,
-              child: Text(
+              child: const Text(
                 'Solusi terbaik untuk kebutuhan Ujian di Kelas Kamu!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -105,10 +110,10 @@ class _LandingPageState extends State<LandingPage> {
                 ),
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
-              child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: SizedBox(
                 height: 40,
                 width: double.infinity,
                 child: ElevatedButton(

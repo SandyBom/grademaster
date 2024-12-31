@@ -19,7 +19,7 @@ class Index extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/index': (context) => Index(),
+        '/index': (context) => const Index(),
         '/login': (context) => LoginPage(),
       },
       debugShowCheckedModeBanner: false,
@@ -42,7 +42,7 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
 
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
 
   @override
   void initState() {
@@ -52,9 +52,9 @@ class _MainNavigationState extends State<MainNavigation> {
 
   // List of pages for each tab
   final List<Widget> _pages = [
-    HomePelajar(), // Beranda
+    const HomePelajar(), // Beranda
     RekapitulasiPage(), // Highlights
-    ProfilePage(), // Settings
+    const ProfilePage(), // Settings
   ];
 
   void _onTabTapped(int index) {
@@ -101,7 +101,7 @@ class _MainNavigationState extends State<MainNavigation> {
               Icons.book,
               color: OwnColor.colors['Putih'],
             ),
-            title: Text(
+            title: const Text(
               'Rekapitulasi',
               style: TextStyle(color: Colors.white),
             ),
@@ -111,7 +111,7 @@ class _MainNavigationState extends State<MainNavigation> {
               Icons.person,
               color: OwnColor.colors['Putih'],
             ),
-            title: Text(
+            title: const Text(
               'Profil',
               style: TextStyle(color: Colors.white),
             ),

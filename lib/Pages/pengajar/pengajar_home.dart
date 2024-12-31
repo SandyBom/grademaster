@@ -74,12 +74,12 @@ class _HomePengajarState extends State<HomePengajar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + 40),
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
         child: SafeArea(
           child: Stack(
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
                   image: DecorationImage(
@@ -105,7 +105,7 @@ class _HomePengajarState extends State<HomePengajar> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Column(
           children: [
-            PageBox(),
+            const PageBox(),
             PengajarCard(
               data: _get,
               onDelete: _refreshData, // Pass the refresh method here
@@ -118,19 +118,19 @@ class _HomePengajarState extends State<HomePengajar> {
 }
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({Key? key}) : super(key: key);
+  const HomeHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(),
     );
   }
 }
 
 class PageBox extends StatelessWidget {
-  const PageBox({Key? key}) : super(key: key);
+  const PageBox({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -140,143 +140,166 @@ class PageBox extends StatelessWidget {
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-          color: OwnColor.colors['Hijau'],
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2), // Warna bayangan
-              spreadRadius: 3, // Sebaran bayangan
-              blurRadius: 7, // Tingkat blur
-              offset: Offset(4, 4), // Posisi bayangan (x, y)
-            )
-          ]),
+        color: OwnColor.colors['BiruMuda'],
+        borderRadius: BorderRadius.circular(20),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey.withOpacity(0.2), // Warna bayangan
+        //     spreadRadius: 3, // Sebaran bayangan
+        //     blurRadius: 7, // Tingkat blur
+        //     offset: Offset(4, 4), // Posisi bayangan (x, y)
+        //   )
+        // ],
+      ),
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 flex: 1,
-                child: Container(
-                  height: 40,
-                  child: ElevatedButton.icon(
+                child: SizedBox(
+                  height: 45, // Atur tinggi sesuai kebutuhan
+                  child: FloatingActionButton.extended(
+                    backgroundColor: OwnColor.colors['Putih'],
                     onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SiswaTerdaftar())),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SiswaTerdaftar()),
+                    ),
+                    icon: Container(
+                      width: 35,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: OwnColor.colors['Hijau'],
                       ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      child: const Icon(
+                        Icons.groups,
+                        color: Colors.white,
+                      ),
                     ),
-                    icon: Icon(
-                      Icons.groups,
-                      color: OwnColor.colors['BiruTua'],
+                    label: Text(
+                      'Pelajar Terdaftar',
+                      style: TextStyle(
+                        color: OwnColor.colors['Hitam'],
+                        fontSize: MediaQuery.of(context).size.width * 0.023,
+                      ),
                     ),
-                    label: Text('Pelajar Terdaftar',
-                        style: TextStyle(
-                            color: OwnColor.colors['BiruTua'],
-                            fontSize:
-                                MediaQuery.of(context).size.width * 0.023)),
                   ),
                 ),
               ),
               SizedBox(width: screenWidth * 0.02),
               Expanded(
                 flex: 1,
-                child: Container(
-                  height: 40,
-                  child: ElevatedButton.icon(
-                    onPressed: () => {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AddSoal()))
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
+                child: SizedBox(
+                  height: 45, // Atur tinggi sesuai kebutuhan
+                  child: FloatingActionButton.extended(
+                    backgroundColor: OwnColor.colors['Putih'],
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AddSoal()),
+                    ),
+                    icon: Container(
+                      width: 35,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: OwnColor.colors['Hijau'],
                       ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
                     ),
-                    icon: Icon(
-                      Icons.add,
-                      color: OwnColor.colors['BiruTua'],
+                    label: Text(
+                      'Tambah Soal',
+                      style: TextStyle(
+                        color: OwnColor.colors['Hitam'],
+                        fontSize: MediaQuery.of(context).size.width * 0.023,
+                      ),
                     ),
-                    label: Text('Tambah Soal',
-                        style: TextStyle(
-                            color: OwnColor.colors['BiruTua'],
-                            fontSize:
-                                MediaQuery.of(context).size.width * 0.023)),
                   ),
                 ),
-              )
+              ),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             children: [
               Expanded(
-                  flex: 1,
-                  child: Container(
-                    height: 40,
-                    child: ElevatedButton.icon(
-                      onPressed: () => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PengajarTerdaftar()))
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                      ),
-                      icon: Icon(
-                        Icons.man_outlined,
-                        color: OwnColor.colors['BiruTua'],
-                      ),
-                      label: Text('Pengajar Terdaftar',
-                          style: TextStyle(
-                              color: OwnColor.colors['BiruTua'],
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.023)),
+                flex: 1,
+                child: SizedBox(
+                  height: 45, // Tinggi tombol
+                  child: FloatingActionButton.extended(
+                    backgroundColor:
+                        OwnColor.colors['Putih'], // Warna latar tombol
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PengajarTerdaftar()),
                     ),
-                  )),
+                    icon: Container(
+                      width: 35,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: OwnColor.colors['Hijau'], // Warna latar ikon
+                      ),
+                      child: const Icon(
+                        Icons.man_outlined,
+                        color: Colors.white, // Warna ikon
+                        size: 20,
+                      ),
+                    ),
+                    label: Text(
+                      'Pengajar Terdaftar',
+                      style: TextStyle(
+                        color: OwnColor.colors['Hitam'], // Warna teks
+                        fontSize: MediaQuery.of(context).size.width * 0.023,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(width: screenWidth * 0.02),
               Expanded(
-                  flex: 1,
-                  child: Container(
-                    height: 40,
-                    child: ElevatedButton.icon(
-                      onPressed: () => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BankSoalPage()))
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                      ),
-                      icon: Icon(
-                        Icons.collections_bookmark_rounded,
-                        color: OwnColor.colors['BiruTua'],
-                      ),
-                      label: Text('Bank Soal',
-                          style: TextStyle(
-                              color: OwnColor.colors['BiruTua'],
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.023)),
+                flex: 1,
+                child: SizedBox(
+                  height: 45, // Tinggi tombol
+                  child: FloatingActionButton.extended(
+                    backgroundColor:
+                        OwnColor.colors['Putih'], // Warna latar tombol
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => BankSoalPage()),
                     ),
-                  ))
+                    icon: Container(
+                      width: 35,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: OwnColor.colors['Hijau'], // Warna latar ikon
+                      ),
+                      child: const Icon(
+                        Icons.collections_bookmark_rounded,
+                        color: Colors.white, // Warna ikon
+                        size: 20,
+                      ),
+                    ),
+                    label: Text(
+                      'Bank Soal',
+                      style: TextStyle(
+                        color: OwnColor.colors['Hitam'], // Warna teks
+                        fontSize: MediaQuery.of(context).size.width * 0.023,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
+          ),
+          const SizedBox(
+            height: 10,
           ),
           SizedBox(
               width: double.infinity,
@@ -319,7 +342,7 @@ class PengajarCard extends StatelessWidget {
             ? 1
             : data
                 .length, // Show a single item (like a "no data" message) if empty
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
@@ -328,7 +351,7 @@ class PengajarCard extends StatelessWidget {
         itemBuilder: (context, index) {
           if (data.isEmpty) {
             // Handle empty data scenario
-            return Center(child: Text(''));
+            return const Center(child: Text(''));
           }
 
           return AssesmentCardP(
@@ -345,8 +368,7 @@ class PengajarCard extends StatelessWidget {
 }
 
 class AssesmentCardP extends StatefulWidget {
-  const AssesmentCardP({Key? key, required this.data, required this.onDelete})
-      : super(key: key);
+  const AssesmentCardP({super.key, required this.data, required this.onDelete});
 
   final Map<String, dynamic> data;
   final Function onDelete;
@@ -425,7 +447,7 @@ class _AssesmentCardPState extends State<AssesmentCardP> {
       ]),
       child: ElevatedButton(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
           ),
         ),
@@ -459,7 +481,7 @@ class _AssesmentCardPState extends State<AssesmentCardP> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * .19,
                   height: MediaQuery.of(context).size.width * .12,
                   child: Text(
@@ -477,7 +499,7 @@ class _AssesmentCardPState extends State<AssesmentCardP> {
                   width: MediaQuery.of(context).size.width * .1,
                   height: MediaQuery.of(context).size.width * .1,
                   decoration: BoxDecoration(
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         spreadRadius: 0.15,
                         blurRadius: 2,
@@ -498,14 +520,14 @@ class _AssesmentCardPState extends State<AssesmentCardP> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * .26,
                   child: Text(
                     widget.data['nama_kelas'],
                     style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width * .025,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                        fontSize: MediaQuery.of(context).size.width * .025,
+                        overflow: TextOverflow.ellipsis,
+                        color: OwnColor.colors['Hitam']),
                     maxLines: 2,
                   ),
                 ),
@@ -519,10 +541,12 @@ class _AssesmentCardPState extends State<AssesmentCardP> {
                       Icon(
                         Icons.date_range_outlined,
                         size: 15,
+                        color: OwnColor.colors['Hitam'],
                       ),
                       Text(
                         widget.data['tanggal'] ?? 'Unknown',
-                        style: TextStyle(fontSize: 10),
+                        style: TextStyle(
+                            fontSize: 10, color: OwnColor.colors['Hitam']),
                       ),
                     ],
                   ),
@@ -531,10 +555,12 @@ class _AssesmentCardPState extends State<AssesmentCardP> {
                       Icon(
                         Icons.access_time,
                         size: 15,
+                        color: OwnColor.colors['Hitam'],
                       ),
                       Text(
                         widget.data['waktu_mulai'] ?? 'Unknown',
-                        style: TextStyle(fontSize: 10),
+                        style: TextStyle(
+                            fontSize: 10, color: OwnColor.colors['Hitam']),
                       ),
                     ],
                   ),
@@ -554,11 +580,10 @@ class IconDropdown extends StatefulWidget {
   final Function onDelete;
 
   const IconDropdown(
-      {Key? key,
+      {super.key,
       required this.data,
       required this.onDelete,
-      required this.soal})
-      : super(key: key);
+      required this.soal});
 
   @override
   _IconDropdownState createState() => _IconDropdownState();
@@ -596,14 +621,14 @@ class _IconDropdownState extends State<IconDropdown> {
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                       content:
                           Text('ID is missing. Cannot navigate to edit page.')),
                 );
               }
             },
-            child: const Icon(Icons.edit),
             elevation: 0,
+            child: const Icon(Icons.edit),
           ),
         ),
         SizedBox(height: MediaQuery.of(context).size.height * .02),
@@ -631,8 +656,8 @@ class _IconDropdownState extends State<IconDropdown> {
                 );
               }
             },
-            child: const Icon(Icons.delete),
             elevation: 0,
+            child: const Icon(Icons.delete),
           ),
         ),
       ];
@@ -730,7 +755,7 @@ class _IconDropdownState extends State<IconDropdown> {
       );
     });
 
-    Overlay.of(context)?.insert(_overlayEntry!);
+    Overlay.of(context).insert(_overlayEntry!);
 
     setState(() {
       isMenuOpen = true;

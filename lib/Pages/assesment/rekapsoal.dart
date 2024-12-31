@@ -88,8 +88,8 @@ class _RekapSoalState extends State<RekapSoal> {
       );
 
       // Kembali ke halaman HomePengajar dan refresh data
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => IndexPengajar()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const IndexPengajar()));
     } catch (e) {
       print('Error saving data: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -102,12 +102,12 @@ class _RekapSoalState extends State<RekapSoal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + 40),
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
         child: SafeArea(
           child: Stack(
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
                   image: DecorationImage(
@@ -116,7 +116,7 @@ class _RekapSoalState extends State<RekapSoal> {
                   ),
                 ),
               ),
-              Center(
+              const Center(
                 child: Text('Edit Soal',
                     style: TextStyle(
                         fontSize: 28,
@@ -127,7 +127,7 @@ class _RekapSoalState extends State<RekapSoal> {
                 left: 16,
                 top: 16,
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
                     // Call Navigator.pop() to go back to the previous screen
                     Navigator.pop(context);
@@ -142,12 +142,12 @@ class _RekapSoalState extends State<RekapSoal> {
           future: _soalData,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(
                   child: Text('Error loading data: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No data available'));
+              return const Center(child: Text('No data available'));
             }
 
             return ListView.builder(
@@ -167,6 +167,7 @@ class _RekapSoalState extends State<RekapSoal> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextFormField(
+                            maxLines: null,
                             initialValue: soal['soal'],
                             onChanged: (value) {
                               _soalList[index]['soal'] = value;
@@ -177,7 +178,7 @@ class _RekapSoalState extends State<RekapSoal> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text(
+                          const Text(
                             'Jawaban:',
                             style: TextStyle(
                               fontSize: 16,
@@ -193,6 +194,7 @@ class _RekapSoalState extends State<RekapSoal> {
                                   Expanded(
                                     flex: 2,
                                     child: TextFormField(
+                                      maxLines: null,
                                       initialValue: jawaban[jawabanIndex]
                                           ['keterangan_pilihan'],
                                       onChanged: (value) {
@@ -243,7 +245,7 @@ class _RekapSoalState extends State<RekapSoal> {
           _saveEditedData();
           print('Data yang dikirim: ${jsonEncode(_soalList)}');
         },
-        child: Icon(Icons.save),
+        child: const Icon(Icons.save),
       ),
     );
   }

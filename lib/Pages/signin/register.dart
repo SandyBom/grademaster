@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -60,10 +62,10 @@ class _RegisterPageState extends State<RegisterPage> {
         if (responseData['status'] == 'success') {
           // Menampilkan Snackbar
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Anda berhasil terdaftar!')));
+              const SnackBar(content: Text('Anda berhasil terdaftar!')));
 
           // Navigasi ke halaman LoginPage setelah 2 detik
-          await Future.delayed(Duration(seconds: 2));
+          await Future.delayed(const Duration(seconds: 2));
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
@@ -99,9 +101,9 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Registrasi')),
+      appBar: AppBar(title: const Text('Registrasi')),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
@@ -128,7 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -148,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 onChanged: (val) => namaPengguna = val,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -168,7 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 onChanged: (val) => namaLengkap = val,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -188,7 +190,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 onChanged: (val) => email = val,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -209,7 +211,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 obscureText: true,
                 onChanged: (val) => kataSandi = val,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               GestureDetector(
@@ -235,7 +237,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
@@ -300,7 +302,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   onChanged: (val) => semester = val,
                 ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -320,7 +322,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 onChanged: (val) => noTelp = val,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -340,16 +342,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 onChanged: (val) => alamat = val,
               ),
-              SizedBox(height: 16),
-              Container(
+              const SizedBox(height: 16),
+              SizedBox(
                 width: double.infinity,
                 height: 45,
                 child: ElevatedButton(
                   onPressed: registerUser,
-                  child: Text('Register',
-                      style: TextStyle(
-                        color: OwnColor.colors['Putih'],
-                      )),
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
                         OwnColor.colors['Hijau'], // Warna tombol hijau
@@ -358,6 +356,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           15), // Membuat tombol dengan sudut tumpul
                     ),
                   ),
+                  child: Text('Register',
+                      style: TextStyle(
+                        color: OwnColor.colors['Putih'],
+                      )),
                 ),
               )
             ],

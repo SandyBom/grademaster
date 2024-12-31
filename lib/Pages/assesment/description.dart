@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert'; // For decoding JSON
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-final storage = FlutterSecureStorage();
+final storage = const FlutterSecureStorage();
 
 class DescriptionPage extends StatefulWidget {
   static const nameRoute = '/descriptionpage';
@@ -103,7 +103,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
         child: Column(
           children: [
             _buildHeader(context),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildBody(context, screenHeight),
           ],
         ),
@@ -133,7 +133,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                 ),
               ),
             ),
-            DataColumn(label: Text('')),
+            const DataColumn(label: Text('')),
           ],
           rows: [
             _buildDataRow(
@@ -171,7 +171,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
               color: OwnColor.colors['Putih'],
               size: MediaQuery.of(context).size.width * 0.025,
             ),
-            SizedBox(width: 5),
+            const SizedBox(width: 5),
             Text(
               label,
               style: TextStyle(
@@ -195,7 +195,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
   }
 
   Widget _buildBody(BuildContext context, double screenHeight) {
-    return Container(
+    return SizedBox(
       height: screenHeight < 760
           ? MediaQuery.of(context).size.width * 0.5
           : MediaQuery.of(context).size.width * 0.7,
@@ -233,8 +233,8 @@ class _DescriptionPageState extends State<DescriptionPage> {
                     },
             ),
           if (isAssesmenSubmitted)
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 20.0),
               child: Text(
                 'Anda sudah menyelesaikan assesmen ini.',
                 style:
@@ -252,7 +252,7 @@ class Description extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Padding(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),

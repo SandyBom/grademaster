@@ -17,7 +17,7 @@ class _EnrollPageState extends State<EnrollPage> {
   String? token;
   String? idPelajar;
 
-  final storage = FlutterSecureStorage(); // Untuk menyimpan token
+  final storage = const FlutterSecureStorage(); // Untuk menyimpan token
 
   @override
   void initState() {
@@ -97,11 +97,11 @@ class _EnrollPageState extends State<EnrollPage> {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['success'] == true) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Successfully enrolled in the course!")),
+          const SnackBar(content: Text("Successfully enrolled in the course!")),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to enroll in the course.")),
+          const SnackBar(content: Text("Failed to enroll in the course.")),
         );
       }
     } catch (e) {
@@ -113,12 +113,12 @@ class _EnrollPageState extends State<EnrollPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + 40),
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
         child: SafeArea(
           child: Stack(
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
                   image: DecorationImage(
@@ -127,7 +127,7 @@ class _EnrollPageState extends State<EnrollPage> {
                   ),
                 ),
               ),
-              Center(
+              const Center(
                 child: Text('Enroll Mata Kuliah',
                     style: TextStyle(
                         fontSize: 28,
@@ -138,7 +138,7 @@ class _EnrollPageState extends State<EnrollPage> {
                 left: 16,
                 top: 16,
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
                     // Call Navigator.pop() to go back to the previous screen
                     Navigator.pop(context);
@@ -150,7 +150,7 @@ class _EnrollPageState extends State<EnrollPage> {
         ),
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: matkulList.length,
               itemBuilder: (context, index) {
@@ -160,12 +160,12 @@ class _EnrollPageState extends State<EnrollPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(matkul['nama_matkul']), // Menampilkan nama_matkul
-                        SizedBox(
+                        const SizedBox(
                             height:
                                 5), // Memberi jarak antara nama_matkul dan nama_prodi
                         Text(
                           matkul['nama_prodi'], // Menampilkan nama_prodi
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize:
                                 14, // Ukuran font lebih kecil untuk nama_prodi
                             color:
@@ -174,7 +174,7 @@ class _EnrollPageState extends State<EnrollPage> {
                         ),
                       ],
                     ),
-                    trailing: Container(
+                    trailing: SizedBox(
                         height: 45,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(

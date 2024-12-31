@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:Grademaster/Pages/index_pengajar.dart';
+import 'package:Grademaster/components/material_3_demo/lib/own_component.dart';
 import 'package:flutter/material.dart';
 import 'package:Grademaster/Pages/pengajar/pengajar_home.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class AddSoal extends StatefulWidget {
@@ -171,8 +173,45 @@ class _AddSoalState extends State<AddSoal> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: const Text('Tambah Soal')),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
+                  image: DecorationImage(
+                    image: AssetImage('ab.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              const Center(
+                child: Text('Tambah Soal',
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white)),
+              ),
+              Positioned(
+                left: 16,
+                top: 16,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    // Call Navigator.pop() to go back to the previous screen
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -194,43 +233,168 @@ class _AddSoalState extends State<AddSoal> {
                     }).toList(),
                     onChanged: (value) =>
                         setState(() => _selectedAssesmen = value),
-                    decoration:
-                        const InputDecoration(labelText: 'Pilih ID Assesmen'),
+                    decoration: InputDecoration(
+                      labelText: 'Nama Assesmen',
+                      // Menggunakan parameter labelText
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      border: authOutlineInputBorder,
+                      enabledBorder: authOutlineInputBorder.copyWith(
+                          borderSide: const BorderSide(color: Colors.grey)),
+                      focusedBorder: authOutlineInputBorder.copyWith(
+                        borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                      ),
+                    ),
                   ),
+                  SizedBox(height: screenWidth * 0.03),
                   TextFormField(
                     controller: _questionController,
-                    decoration: const InputDecoration(labelText: 'Pertanyaan'),
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      labelText: 'Pertanyaan',
+                      // Menggunakan parameter labelText
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      border: authOutlineInputBorder,
+                      enabledBorder: authOutlineInputBorder.copyWith(
+                          borderSide: const BorderSide(color: Colors.grey)),
+                      focusedBorder: authOutlineInputBorder.copyWith(
+                        borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                      ),
+                    ),
                   ),
+                  SizedBox(height: screenWidth * 0.03),
                   TextFormField(
                     controller: _poinController,
-                    decoration: const InputDecoration(labelText: 'Poin'),
+                    decoration: InputDecoration(
+                      labelText: 'Poin',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      border: authOutlineInputBorder,
+                      enabledBorder: authOutlineInputBorder.copyWith(
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: authOutlineInputBorder.copyWith(
+                        borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                      ),
+                    ),
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter
+                          .digitsOnly, // Hanya memperbolehkan angka
+                    ],
                   ),
-                  ..._answerControllers.entries.map((entry) => TextFormField(
-                        controller: entry.value,
-                        decoration:
-                            InputDecoration(labelText: 'Jawaban ${entry.key}'),
+                  SizedBox(height: screenWidth * 0.03),
+                  ..._answerControllers.entries.map((entry) => Column(
+                        children: [
+                          TextFormField(
+                            maxLines: null,
+                            controller: entry.value,
+                            decoration: InputDecoration(
+                              labelText: 'Jawaban ${entry.key}',
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 16,
+                              ),
+                              border: authOutlineInputBorder,
+                              enabledBorder: authOutlineInputBorder.copyWith(
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: authOutlineInputBorder.copyWith(
+                                borderSide:
+                                    const BorderSide(color: Color(0xFF214C7A)),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height: screenWidth *
+                                  0.03), // Tambahkan jarak antar TextFormField
+                        ],
                       )),
+                  SizedBox(height: screenWidth * 0.03),
                   DropdownButtonFormField<String>(
                     value: _correctAnswer,
                     items: _answerControllers.keys
                         .map((key) => DropdownMenuItem(
                             value: key, child: Text('Jawaban $key')))
                         .toList(),
+                    decoration: InputDecoration(
+                      labelText: 'Pilih Jawaban Benar',
+                      // Menggunakan parameter labelText
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      border: authOutlineInputBorder,
+                      enabledBorder: authOutlineInputBorder.copyWith(
+                          borderSide: const BorderSide(color: Colors.grey)),
+                      focusedBorder: authOutlineInputBorder.copyWith(
+                        borderSide: const BorderSide(color: Color(0xFF214C7A)),
+                      ),
+                    ),
                     onChanged: (value) => setState(
                         () => value != null ? _correctAnswer = value : null),
                   ),
+                  SizedBox(height: screenWidth * 0.03),
                   Row(
                     children: [
-                      ElevatedButton(
-                        onPressed: _addQuestion,
-                        child: const Text('Tambah Soal'),
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: 45,
+                          child: ElevatedButton(
+                            onPressed: _addQuestion,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: OwnColor
+                                  .colors['Hijau'], // Warna tombol hijau
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15), // Membuat tombol dengan sudut tumpul
+                              ),
+                            ),
+                            child: Text(
+                              'Tambah Soal',
+                              style: TextStyle(color: OwnColor.colors['Putih']),
+                            ),
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 16),
-                      ElevatedButton(
-                        onPressed: _questions.isEmpty ? null : _submitQuestions,
-                        child: const Text('Submit Soal'),
-                      ),
+                      Expanded(
+                          flex: 1,
+                          child: SizedBox(
+                            height: 45,
+                            child: ElevatedButton(
+                              onPressed:
+                                  _questions.isEmpty ? null : _submitQuestions,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: OwnColor
+                                    .colors['BiruTua'], // Warna tombol hijau
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      15), // Membuat tombol dengan sudut tumpul
+                                ),
+                              ),
+                              child: Text(
+                                'Submit Soal',
+                                style:
+                                    TextStyle(color: OwnColor.colors['Putih']),
+                              ),
+                            ),
+                          ))
                     ],
                   ),
                 ],

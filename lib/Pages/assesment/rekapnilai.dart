@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class RekapNilai extends StatefulWidget {
+  const RekapNilai({super.key});
+
   @override
   _RekapNilaiState createState() => _RekapNilaiState();
 }
@@ -46,12 +48,12 @@ class _RekapNilaiState extends State<RekapNilai> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
+        title: const Text('Error'),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -61,13 +63,47 @@ class _RekapNilaiState extends State<RekapNilai> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Rekapitulasi'),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
+                  image: DecorationImage(
+                    image: AssetImage('ab.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              const Center(
+                child: Text('Rekapitulasi',
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white)),
+              ),
+              Positioned(
+                left: 16,
+                top: 16,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    // Call Navigator.pop() to go back to the previous screen
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : _rekapitulasiData.isEmpty
-              ? Center(child: Text('Tidak ada data rekapitulasi.'))
+              ? const Center(child: Text('Tidak ada data rekapitulasi.'))
               : ListView.builder(
                   itemCount: _rekapitulasiData.length,
                   itemBuilder: (context, index) {
