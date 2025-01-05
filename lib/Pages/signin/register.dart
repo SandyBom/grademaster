@@ -68,7 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
           await Future.delayed(const Duration(seconds: 2));
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
+            MaterialPageRoute(builder: (context) => const LoginPage()),
           );
         } else {
           print('Registrasi gagal: ${responseData['message']}');

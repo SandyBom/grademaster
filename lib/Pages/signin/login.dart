@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Login',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: LoginPage(),
+      home: const LoginPage(),
     );
   }
 }
@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             children: [
               Image.asset(
-                'rb_2150923186.png',
+                'assets/rb_2150923186.png',
                 width: 250,
                 height: 250,
               ),
@@ -240,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             child: isLoading
-                                ? CircularProgressIndicator(
+                                ? const CircularProgressIndicator(
                                     color: Colors.white,
                                   )
                                 : Text(
@@ -267,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => RegisterPage()),
+                                    builder: (context) => const RegisterPage()),
                               );
                             },
                             style: ElevatedButton.styleFrom(
@@ -279,7 +279,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             child: isLoading
-                                ? CircularProgressIndicator(
+                                ? const CircularProgressIndicator(
                                     color: Colors.white,
                                   )
                                 : Text(

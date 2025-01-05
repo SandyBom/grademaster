@@ -16,7 +16,7 @@ class HomePelajar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + 40),
+        preferredSize: const Size.fromHeight(kToolbarHeight + 40),
         child: SafeArea(
           child: Stack(
             children: [
@@ -102,7 +102,7 @@ class DiscountBanner extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      EnrollPage()))
+                                      const EnrollPage()))
                         },
                     icon: Container(
                       width: 35,
@@ -133,10 +133,10 @@ class GenerateCard extends StatefulWidget {
 }
 
 class GenerateCardState extends State<GenerateCard> {
-  List<dynamic> _get = [];
+  final List<dynamic> _get = [];
   bool _isLoading = true;
 
-  final storage = FlutterSecureStorage(); // Untuk menyimpan token
+  final storage = const FlutterSecureStorage(); // Untuk menyimpan token
   String? token; // Untuk menyimpan token yang diambil
   String? idPelajar; // Store idPelajar here
   String? idMatkul; // Store id_matkul here
@@ -311,10 +311,10 @@ class AssesmentCard extends StatelessWidget {
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
         child: ElevatedButton(
           style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
             ),
-            elevation: MaterialStateProperty.all(2),
+            elevation: WidgetStateProperty.all(2),
           ),
           onPressed: () {
             final arguments = {
@@ -358,7 +358,7 @@ class AssesmentCard extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Container(
+                                SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.19,
                                   height:
@@ -375,7 +375,7 @@ class AssesmentCard extends StatelessWidget {
                                 )
                               ],
                             ),
-                            Container(
+                            SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.26,
                                 child: Text(
                                   data['nama_kelas'] ?? '-',

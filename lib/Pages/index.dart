@@ -20,7 +20,7 @@ class Index extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/index': (context) => const Index(),
-        '/login': (context) => LoginPage(),
+        '/login': (context) => const LoginPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'Grade Master',
@@ -53,7 +53,7 @@ class _MainNavigationState extends State<MainNavigation> {
   // List of pages for each tab
   final List<Widget> _pages = [
     const HomePelajar(), // Beranda
-    RekapitulasiPage(), // Highlights
+    const RekapitulasiPage(), // Highlights
     const ProfilePage(), // Settings
   ];
 

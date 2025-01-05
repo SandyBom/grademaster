@@ -151,7 +151,7 @@ class _SoalAssesmenState extends State<SoalAssesmen> {
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.elliptical(40, 40)),
                   image: DecorationImage(
-                    image: AssetImage('ab.png'),
+                    image: AssetImage('assets/ab.png'),
                     fit: BoxFit.fill,
                   ),
                 ),

@@ -271,7 +271,8 @@ class PageBox extends StatelessWidget {
                         OwnColor.colors['Putih'], // Warna latar tombol
                     onPressed: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => BankSoalPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const BankSoalPage()),
                     ),
                     icon: Container(
                       width: 35,
@@ -306,8 +307,10 @@ class PageBox extends StatelessWidget {
               height: 40,
               child: FloatingActionButton.extended(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AssesmentPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AssesmentPage()));
                 },
                 icon: Icon(
                   Icons.add,

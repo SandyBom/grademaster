@@ -35,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // Arahkan pengguna ke halaman login
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
     );
   }
 

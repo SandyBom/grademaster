@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert'; // For decoding JSON
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-final storage = const FlutterSecureStorage();
+const storage = FlutterSecureStorage();
 
 class DescriptionPage extends StatefulWidget {
   static const nameRoute = '/descriptionpage';

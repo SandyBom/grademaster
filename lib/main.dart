@@ -7,7 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(),
         primarySwatch: Colors.blue,
       ),
-      home: LandingPage(),
+      home: const LandingPage(),
     );
   }
 }
@@ -80,7 +80,7 @@ class _LandingPageState extends State<LandingPage> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+        MaterialPageRoute(builder: (BuildContext context) => const LoginPage()),
       );
     }
   }
@@ -95,14 +95,14 @@ class _LandingPageState extends State<LandingPage> {
           children: [
             const SizedBox(height: 20),
             Image.asset(
-              'logo.png',
+              'assets/logo.png',
               width: 300,
               height: 300,
             ),
             const SizedBox(height: 10),
-            SizedBox(
+            const SizedBox(
               width: 260,
-              child: const Text(
+              child: Text(
                 'Solusi terbaik untuk kebutuhan Ujian di Kelas Kamu!',
                 textAlign: TextAlign.center,
                 style: TextStyle(

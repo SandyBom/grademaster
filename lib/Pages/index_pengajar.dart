@@ -1,6 +1,5 @@
 import 'package:Grademaster/Pages/assesment/rekapnilai.dart';
 import 'package:Grademaster/Pages/pengajar/pengajar_home.dart';
-import 'package:Grademaster/Pages/pengajar/rekap/cetakpdf.dart';
 import 'package:Grademaster/Pages/signin/login.dart';
 import 'package:Grademaster/components/material_3_demo/lib/own_component.dart';
 import 'package:Grademaster/profile.dart';
@@ -21,7 +20,7 @@ class IndexPengajar extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/index': (context) => const IndexPengajar(),
-        '/login': (context) => LoginPage(),
+        '/login': (context) => const LoginPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'Grade Master',
@@ -53,7 +52,7 @@ class _MainNavigationState extends State<MainNavigation> {
   // List of pages for each tab
   final List<Widget> _pages = [
     const HomePengajar(),
-    RekapNilai(),
+    const RekapNilai(),
     const ProfilePage()
   ];
 
